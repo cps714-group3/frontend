@@ -1,26 +1,20 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Box, Center, Heading, Text } from '@chakra-ui/react';
+import { useFirebaseApp, AuthProvider } from 'reactfire';
 import './App.css';
+import { Header } from './components/header/Header';
+import { getAuth } from 'firebase/auth';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const app = useFirebaseApp();
+    const auth = getAuth(app);
+    return (
+        <AuthProvider sdk={auth}>
+            <Box w='100vw' h='100vh'>
+                <Header />
+            </Box>
+        </AuthProvider>
+    );
 }
 
 export default App;
