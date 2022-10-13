@@ -1,6 +1,6 @@
 import { Box, Center } from '@chakra-ui/react';
 import React from 'react';
-import { usePageHeight } from '../helpers/functions';
+import { usePageHeight } from '../helpers/hooks';
 
 export const Landing = () => {
     const pageHeight = usePageHeight();

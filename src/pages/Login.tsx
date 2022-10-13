@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Box, Center } from '@chakra-ui/react';
-import { usePageHeight } from '../helpers/functions';
+import { usePageHeight } from '../helpers/hooks';
 
 export const Login = () => {
     const pageHeight = usePageHeight();
