@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ChakraProvider } from '@chakra-ui/react';
 import { FirebaseAppProvider } from 'reactfire';
-
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { theme } from './theme/chakra.theme';
+import { BrowserRouter } from 'react-router-dom';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyA7OHjWtwVqouJGBQlnTJqh6HsPxRkVNvE',
@@ -23,7 +23,9 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
     <ChakraProvider theme={theme}>
         <FirebaseAppProvider firebaseConfig={firebaseConfig}>
-            <App />
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
         </FirebaseAppProvider>
     </ChakraProvider>,
 );
