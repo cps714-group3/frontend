@@ -59,7 +59,7 @@ export const Landing = () => {
                             <h2>Accelerate the development of your project now!</h2>
                             <p>Dumpster Fire enables teams to maximize the efficiency and organization of their project. No matter how big or small your team, our wide array of tools will
                                 help you and your team thrive.</p>
-                            <a href="/login" className="btn has-arrow">Sign up today<i className="icon-arrow-right1"></i></a>
+                            <a href="/signup" className="btn has-arrow">Sign up today<i className="icon-arrow-right1"></i></a>
                         </div>
                         <div className="col">
                             <LandingFAQ/>
@@ -90,7 +90,7 @@ export const Landing = () => {
                         </div>
                         <div className="right-col">
                             <span className="title">Start using Dumpster Fire now!</span>
-                            <a href="/login" className="btn has-arrow">Sign up <i className="icon-arrow-right1"></i></a>
+                            <a href="/signup" className="btn has-arrow">Sign up <i className="icon-arrow-right1"></i></a>
                         </div>
                     </div>
                     <div className="container footer-holder">

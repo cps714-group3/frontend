@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import { FirebaseAppProvider } from 'reactfire';
 import './index.css';
 import App from './App';
@@ -27,7 +27,7 @@ root.render(
                 <App />
             </BrowserRouter>
         </FirebaseAppProvider>
-    </ChakraProvider>,
+    </ChakraProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -7,6 +7,7 @@ import { Header } from './components/header/Header';
 import { getAuth } from 'firebase/auth';
 import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
+import { Signup } from './pages/Signup';
 
 function App() {
     const app = useFirebaseApp();
@@ -15,13 +16,14 @@ function App() {
     const isLandingPage = location.pathname==="/"
     return (
         <AuthProvider sdk={auth}>
-            
+
             {!isLandingPage && <Header />}
             <Routes>
                 <Route path='/' element={<Landing />}></Route>
                 <Route path='/login' element={<Login />}></Route>
+                <Route path='/signup' element={<Signup />} />
             </Routes>
-            
+
         </AuthProvider>
     );
 }

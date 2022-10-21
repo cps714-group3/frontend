@@ -1,6 +1,11 @@
 import { extendTheme } from '@chakra-ui/react';
+import { StyleFunctionProps, mode } from '@chakra-ui/theme-tools';
 
 export const theme = extendTheme({
+    config: {
+        initialColorMode: 'dark',
+        useSystemColorMode: false,
+    },
     colors: {
         gray: {
             750: '#242d3b',
@@ -12,5 +17,13 @@ export const theme = extendTheme({
         green: {
             450: '#2fa862',
         },
+    },
+    styles: {
+        global: () => ({
+            body: {
+                bg: '#070917',
+                color: 'white',
+            },
+        }),
     },
 });
