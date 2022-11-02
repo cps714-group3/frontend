@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import { FirebaseAppProvider } from 'reactfire';
-
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { theme } from './theme/chakra.theme';
+import { BrowserRouter } from 'react-router-dom';
 
 const firebaseConfig = {
     apiKey: 'AIzaSyA7OHjWtwVqouJGBQlnTJqh6HsPxRkVNvE',
@@ -21,14 +21,13 @@ const firebaseConfig = {
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
-    <>
-        <ChakraProvider theme={theme}>
-            <FirebaseAppProvider firebaseConfig={firebaseConfig}>
+    <ChakraProvider theme={theme}>
+        <FirebaseAppProvider firebaseConfig={firebaseConfig}>
+            <BrowserRouter>
                 <App />
-            </FirebaseAppProvider>
-        </ChakraProvider>
-        ,
-    </>,
+            </BrowserRouter>
+        </FirebaseAppProvider>
+    </ChakraProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function
