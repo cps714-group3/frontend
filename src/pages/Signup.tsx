@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo } from 'react';
 
-import { Box, Button, Center, Flex, Heading, Link, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Heading, HStack, Link, Text, VStack } from '@chakra-ui/react';
 import { usePageHeight } from '../helpers/hooks';
 import { GoogleIcon } from '../customIcons/google';
 import { getRedirectResult, GoogleAuthProvider, signInWithRedirect } from 'firebase/auth';
 import { useAuth } from 'reactfire';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as ReactRouterLink } from 'react-router-dom';
 
 export const Signup = () => {
     const pageHeight = usePageHeight();
@@ -34,11 +34,11 @@ export const Signup = () => {
     }, [auth, navigate]);
 
     return (
-        <Box w='full' h={pageHeight}>
+        <Center w='full' h={pageHeight}>
             <Center w='full' h='60%'>
                 <Flex
                     w='400px'
-                    h='300px'
+                    h='full'
                     rounded='lg'
                     flexDir='column'
                     bg='gray.900'
@@ -51,7 +51,7 @@ export const Signup = () => {
                     <Text mt='4' textAlign='center' fontWeight='light'>
                         Create an account by clicking below
                     </Text>
-                    <Center w='full' h='full' as={VStack}>
+                    <Center as={VStack} w='full' h='full' mt='8'>
                         <Button
                             leftIcon={<GoogleIcon boxSize='5' />}
                             iconSpacing='3'
@@ -60,15 +60,20 @@ export const Signup = () => {
                             Sign up with Google
                         </Button>
 
-                        <Link
-                            color='teal.600'
-                            target='_blank'
-                            href='https://support.google.com/accounts/answer/41078?hl=en&co=GENIE.Platform%3DDesktop'>
-                            Forgot password
-                        </Link>
+                        <HStack>
+                            <Link
+                                color='teal.600'
+                                target='_blank'
+                                href='https://support.google.com/accounts/answer/41078?hl=en&co=GENIE.Platform%3DDesktop'>
+                                Forgot password
+                            </Link>
+                            <Link color='teal.600' to='/login' as={ReactRouterLink}>
+                                Log into existing account
+                            </Link>
+                        </HStack>
                     </Center>
                 </Flex>
             </Center>
-        </Box>
+        </Center>
     );
 };
