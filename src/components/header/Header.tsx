@@ -1,13 +1,46 @@
-import { Center, chakra, Heading } from '@chakra-ui/react';
 import React from 'react';
-import { HEADER_HEIGHT_CSS } from '../../helpers/constants';
+import dumpsterFireLogo from '../../images/dumpsterfire.png';
+import './Header.css';
 
-export const Header = () => {
+export const LandingNav = () => {
     return (
-        <chakra.header pt='2' w='full' h={HEADER_HEIGHT_CSS}>
-            <Center>
-                <Heading>Dumpster Fire</Heading>
-            </Center>
-        </chakra.header>
+        <header id='header'>
+            <div className='container'>
+                <div className='logo'>
+                    <a href='/'>
+                        <img src={dumpsterFireLogo} alt='Dumpster Fire Logo' />
+                    </a>
+                </div>
+                <h1 className='active' id='projectTitle'>
+                    Dumpster Fire
+                </h1>
+                <div className='nav-area'>
+                    <ul className='nav'>
+                        <li>
+                            <a href='#visual' className='down'>
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <a href='#features' className='down'>
+                                Features
+                            </a>
+                        </li>
+                        <li>
+                            <a href='#faq' className='down'>
+                                FAQ
+                            </a>
+                        </li>
+                    </ul>
+                    <ul className='buttons'>
+                        <li>
+                            <a href='/login' className='btn'>
+                                Login/Sign up
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
     );
 };
