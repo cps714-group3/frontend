@@ -69,13 +69,13 @@ select:not(:checked) {
   font-weight: 500;
   font-size: 16px;
   color: #07074d;
-  margin-bottom: 12px;
+  margin-bottom: 5px;
 }
 
 .formbold-form-label-2 {
   font-weight: 600;
   font-size: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 .formbold-form-input {
@@ -149,7 +149,7 @@ select:not(:checked) {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px;
+  padding: 20px;
   text-align: center;
 }
 

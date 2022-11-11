@@ -1,58 +1,151 @@
 import React from 'react';
-import {Tree} from "@geist-ui/react";
-import './Reports.css';
+import {Tree} from "@geist-ui/react"; // this is for the file tree component
+import './Reports.css'; // import the css file for this page
 
 
 export const Reports = () => {
 
-    const [docType, setDocType] = React.useState("");
-    const [myFile, setMyFile] = React.useState<any | null>(null);
-    const [fileList, setFileList] = React.useState<any | null>(null);
+    type Doc = {
+        docName: string;
+        docPath: string;
+        docType: string;
+    };
 
+    /*
+        All states (variables) being declared with default values. First array item is the variable
+        itself. Second item is the function that you call to change the value of the variable.
+    */
+    const [docType, setDocType] = React.useState("");
+    const [operation, setOperation] = React.useState("");
+    const [myFile, setMyFile] = React.useState<any | null>(null);
+    const [delFile, setDelFile] = React.useState("");
+    const [fileList, setFileList] = React.useState<any[]>([]);
+    const [counter, setCounter] = React.useState(0);
+    const [burndown, setBurndown] = React.useState<Doc[]>([]);
+    const [gantt, setGantt] = React.useState<Doc[]>([]);
+    const [risk, setRisk] = React.useState<Doc[]>([]);
+    const [projMan, setProjMan] = React.useState<Doc[]>([]);
+    const [other, setOther] = React.useState<Doc[]>([]);
+    const [success, setSuccess] = React.useState<any | null>(null);
+
+    /*
+        Sleep function used to delay for x milliseconds
+    */
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+    /*
+        React hook useEffect runs on page load. This one prevents an auto-scrolling bug
+    */
     React.useEffect(() => {
         window.scrollTo(0, 0); //stop auto scroll on file select
     }, [])
 
     /*
+        This also runs on page load. Fetches list of reports from backend db and sorts them into
+        their respective arrays declared above for easy access later on in the rendering
+    */
     React.useEffect(() => {
-        fetch("http://localhost:8000/api/get_reports")
-        .then(response => response.json())
-        .then(data => {console.log(data)});
-      }, [fileList]);
+        (async () => { 
+    
+            await sleep(1000);
+
+            fetch("http://localhost:8000/api/reports/get_reports") // send get request to backend
+            .then(response => response.json()) // turn response into json
+            .then(data => { // the json above is represented now by the variable data
+                // reset the arrays for each docType to prevent duplicate entries
+                setBurndown([]);
+                setGantt([]);
+                setRisk([]);
+                setProjMan([]);
+                setOther([]);
+
+                setFileList(data["queryResult"]["reports"]); // store the reports array in var fileList
+                
+                /*
+                    elemental for loop goes through each item in the reports array and appends them to
+                    their respective docType arrays
+                */
+                data["queryResult"]["reports"].forEach((value:Doc, index:number) => {
+                    if (value.docType === "burndown") {
+                         //concat instead of push because that what the internet says
+                        setBurndown(burndown => burndown.concat(value));
+                    }
+                    else if (value.docType === "gantt") {
+                        setGantt(gantt => gantt.concat(value));
+                    }
+                    else if (value.docType === "risk") {
+                        setRisk(risk => risk.concat(value));
+                    }
+                    else if (value.docType === "project_management") {
+                        setProjMan(projMan => projMan.concat(value));
+                    }
+                    else {
+                        setOther(other => other.concat(value));
+                    }
+                });
+            });
+        })();
+        
+      }, [counter]);
+    
+    
+    /*
+        This functions handles the submit button press event. Typescript requires the parameter
+        "event" to be set to something so set it to "any".
     */
     const handleSubmit = (event:any) => {
         event.preventDefault();
-        
-        if (docType !== "" && myFile !== null) {
-            console.log(docType);
-            console.log(myFile.name);
-            /*let form = new FormData();
-            form.append("docType", docType);
+        // upload file
+        if (docType !== "" && myFile !== null && operation === "upload") {
+            let form = new FormData(); // init new form
+            form.append("docType", docType); // append stuff to form
             form.append("uploaded_file", myFile);
-            let response =fetch('http://localhost:8000/api/add_report', {
+            // perform the post request
+            fetch('http://localhost:8000/api/reports/add_report', {
                 method: 'POST',
                 body: form
             });
-            console.log(response);*/
+
+            setCounter(counter => counter+1); // I use this counter variable to invoke the file tree re-render upon file upload
+            setSuccess(true); // this is for the success or fail message
+        }
+        else if (docType !== "" && delFile !== "" && operation === "delete") {
+            // same deal except delete report now. I had to set the header Content-Type because I am sending a JSON body
+            fetch("http://localhost:8000/api/reports/delete_report", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({docName: delFile, docType: docType})
+            });
+            setCounter(counter => counter+1);
+            setSuccess(true);
         }
         else {
             console.log("Invalid form data");
+            setSuccess(false);
         }
-        
         
     }
 
+    /*
+        This function handles the file selected by the user when they browse their computer.
+    */
     const updateFile = (event:any) => {
         //event.preventDefault();
-        if (event.target.files[0] !== null){
-            setMyFile(event.target.files[0]);
+        setSuccess(null); // I use this to reset the status message
+        if (event.target.files[0] !== null){ // check if file exists
+            setMyFile(event.target.files[0]); // set the chosen file
         }
         else {
             console.log("No file selected");
         }
-        
     }
 
+    /*
+        This function takes a path to the static folder of the backend and opens a new tab in the user's browser
+        to display the file that was clicked on in the file tree.
+    */
     const openDoc = (path: string) => {
         const temp = path.split("/");
     
@@ -88,32 +181,65 @@ export const Reports = () => {
         }
     };
 
+    /*
+        This is where the html stuff gets rendered dynamically. Google is your friend.
+        To dynamically render components, I use ternary operators "(condition) ? renderThis : elseRenderThat"
+        to show different things for different variable values. If I need to create multiple component, 
+        I use the var.map() function which will render a component for each item in var. If you don't want to
+        use ternary operators, you can also do
+
+        { (() => {
+            your code here. I have example on line 275-318
+        })()}
+    */
     return (
         <div id="container">
             <div id="fileTree">
                 <Tree onClick={openDoc}>
                     <Tree.Folder name="Burndown Charts">
-                        <Tree.File name="cat.jpeg" />
+                        {(burndown.length === 0) ? '':
+                            burndown.map((item, index) => {
+                                return (
+                                    <Tree.File key={index} name={item.docName} />
+                                )
+                            })
+                        }
                     </Tree.Folder>
                     <Tree.Folder name="Gantt Charts">
-                        <Tree.File name="app.js" />
-                        <Tree.File name="index.js" />
-                        <Tree.File name="Layout.js" />
+                        {(gantt.length === 0) ? '':
+                            gantt.map((item, index) => {
+                                return (
+                                    <Tree.File key={index} name={item.docName} />
+                                )
+                            })
+                        }
                     </Tree.Folder>
                     <Tree.Folder name="Project Management Plans">
-                        <Tree.File name="app.js" />
-                        <Tree.File name="index.js" />
-                        <Tree.File name="Layout.js" />
+                        {(projMan.length === 0) ? '':
+                            projMan.map((item, index) => {
+                                return (
+                                    <Tree.File key={index} name={item.docName} />
+                                )
+                            })
+                        }
                     </Tree.Folder>
                     <Tree.Folder name="Risk Reports">
-                        <Tree.File name="app.js" />
-                        <Tree.File name="index.js" />
-                        <Tree.File name="Layout.js" />
+                        {(risk.length === 0) ? '':
+                            risk.map((item, index) => {
+                                return (
+                                    <Tree.File key={index} name={item.docName} />
+                                )
+                            })
+                        }
                     </Tree.Folder>
                     <Tree.Folder name="Other">
-                        <Tree.File name="app.js" />
-                        <Tree.File name="index.js" />
-                        <Tree.File name="Layout.js" />
+                        {(other.length === 0) ? '':
+                            other.map((item, index) => {
+                                return (
+                                    <Tree.File key={index} name={item.docName} />
+                                )
+                            })
+                        }
                     </Tree.Folder>
                 </Tree>
             </div>
@@ -125,7 +251,7 @@ export const Reports = () => {
                             <label className="formbold-form-label">
                             Choose document type:
                             </label>
-                            <select value={docType} onChange={(e) => setDocType(e.target.value)}>
+                            <select value={docType} onChange={(e) => {setDocType(e.target.value); setSuccess(null);}}>
                                 <option hidden disabled value=""> Select an option </option>
                                 <option value="burndown">Burndown Chart</option>
                                 <option value="gantt">Gantt Chart</option>
@@ -135,29 +261,68 @@ export const Reports = () => {
                             </select>
                         </div>
 
-                        <div className="mb-6 pt-4">
-                            <label className="formbold-form-label formbold-form-label-2">
-                            Upload File
+                        <div className="formbold-mb-5">
+                            <label className="formbold-form-label">
+                            Choose operation:
                             </label>
-
-                            <div className="formbold-mb-5 formbold-file-input">
-                            <input type="file" name="file" id="file" onChange={updateFile}/>
-                            <label htmlFor="file">
-                                <div>
-                                <span className="formbold-drop-file">Upload Your File</span>
-                                <span className="formbold-browse"> Browse </span>
-                                </div>
-                            </label>
-                            </div>
-
-                            
+                            <select value={operation} onChange={(e) => {setOperation(e.target.value); setSuccess(null);}}>
+                                <option hidden disabled value=""> Select an option </option>
+                                <option value="upload">Upload</option>
+                                <option value="delete">Delete</option>
+                            </select>
                         </div>
 
-                        {(myFile !== null) ? <label className="formbold-form-label">{myFile.name}</label> : ''}
+                        {(() => {
+                            if (operation === "upload") {
+                                return(
+                                    <div className="mb-6 pt-4">
+                                        <label className="formbold-form-label formbold-form-label-2">
+                                        Upload File
+                                        </label>
+
+                                        <div className="formbold-mb-5 formbold-file-input">
+                                        <input type="file" name="file" id="file" onChange={updateFile}/>
+                                        <label htmlFor="file">
+                                            <div>
+                                            <span className="formbold-drop-file">Upload Your File</span>
+                                            <span className="formbold-browse"> Browse </span>
+                                            </div>
+                                        </label>
+                                        </div>
+                                        {(myFile !== null) ? <label className="formbold-form-label">{myFile.name}</label> : ''}
+                                    </div>
+                                )
+                            }
+
+                            if (operation === "delete") {
+                                return(
+                                    <div className="formbold-mb-5">
+                                        <label className="formbold-form-label">
+                                        Choose file:
+                                        </label>
+                                        <select value={delFile} onChange={(e) => setDelFile(e.target.value)}>
+                                            <option hidden disabled value=""> Select an option </option>
+                                            {
+                                                fileList.map((item, index) => {
+                                                    if (item.docType === docType){
+                                                        return (
+                                                            <option key={index} value={item.docName}>{item.docName}</option>
+                                                        )
+                                                    }
+                                                })
+                                            }
+                                        </select>
+                                    </div>
+                                )
+                            }
+                        })()}
 
                         <div>
-                            <button className="formbold-btn w-full" type="submit">Upload</button>
+                            <button className="formbold-btn w-full" type="submit">Submit</button>
                         </div>
+                        {(success !== null) ? (success === true) ? <label style={{color: "green"}} className="formbold-form-label">Success</label>
+                                : <label style={{color: "red"}} className="formbold-form-label">Operation failed. Please check inputs!</label>
+                            : ''}
                         </form>
                         
                     </div>
