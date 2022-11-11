@@ -9,6 +9,7 @@ import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { LandingNav } from './components/header/Header';
 import { Footer } from './components/footer/Footer';
+import { Reports } from './pages/Reports';
 
 function App() {
     const app = useFirebaseApp();
@@ -21,6 +22,7 @@ function App() {
                 <Route path='/' element={<Landing />}></Route>
                 <Route path='/login' element={<Login />}></Route>
                 <Route path='/signup' element={<Signup />} />
+                <Route path='/reports' element={<Reports />}></Route>
             </Routes>
             <Footer />
         </AuthProvider>
