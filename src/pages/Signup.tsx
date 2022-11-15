@@ -25,7 +25,7 @@ export const Signup = () => {
                 .then(async (result) => {
                     if (result) {
                         const idToken = await result.user.getIdToken();
-                        navigate('/');
+                        navigate('/dashboard');
                     }
                 })
                 .catch((error) => {});
