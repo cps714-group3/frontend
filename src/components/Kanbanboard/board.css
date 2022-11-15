@@ -1,0 +1,18 @@
+
+#dragbox{ 
+    box-shadow: 2px 3px #dadee3;
+    border-radius: 5px;
+    
+}
+
+#droparea{ 
+    border-radius: 5px;
+    margin:0;
+    width:100%;
+}
+
+#boardtitle{
+    margin-top: 10%;
+    font-size:20px;
+    font-weight:bold;
+}
