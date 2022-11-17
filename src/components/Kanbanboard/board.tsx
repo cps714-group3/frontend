@@ -2,19 +2,43 @@ import React, {useState} from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import './board.css';
 import {v4 as uuid} from 'uuid';
+import { BoardNav } from './boardNav';
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Button
+} from '@chakra-ui/react';
+
+
 
 const dummyinfo = [
-    { id: uuid(), content: "Create a Kanban Board: Create a simple Kanban board that can be used in by a development team." },
-    { id: uuid(), content: "Implement Kanban API " },
-    { id: uuid(), content: "Implement user settings: Implement user settings so that blah blah blah blah " },
-    { id: uuid(), content: "Create Simple Drag and Drop for Kanban Board:  blah blah blah blah blah blah blah blahblah blah blah blah   "},
-    { id: uuid(), content: "Implement API Dashboard: blah blah blah blahblah blab blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah" },
-    { id: uuid(), content: "Add Users to Project: blah blah blah blah blah blah blah blahblah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah " },
-    { id: uuid(), content: "Seventh task" },
-    { id: uuid(), content: "Eight task" },
-    { id: uuid(), content: "Ninth task" },
-    { id: uuid(), content: "Tenth task" },
-    { id: uuid(), content: "Eleventh task" }
+    { id: uuid(), title:"This is a a thing", content: "Create a Kanban Board: Create a simple Kanban board that can be used in by a development team."},
+    { id: uuid(), content: "Implement Kanban API ", title:"This board"},
+    { id: uuid(), content: "Implement user settings: Implement user settings so that blah blah blah blah ",title:"Here board" },
+    { id: uuid(), content: "Create Simple Drag and Drop for Kanban Board:  blah blah blah blah blah blah blah blahblah blah blah blah   ", title:"This board"},
+    { id: uuid(), content: "Implement API Dashboard: blah blah blah blahblah blab blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah", title:"This board" },
+    { id: uuid(), content: "Add Users to Project: blah blah blah blah blah blah blah blahblah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah ",title:"This board" },
+    { id: uuid(), content: "Seventh task", title:"This board" },
+    { id: uuid(), content: "Eight task",title:"This board" },
+    { id: uuid(), content: "Ninth task",title:"This board" },
+    { id: uuid(), content: "Tenth task",title:"This board" },
+    { id: uuid(), content: "Eleventh task", title:"Here board" },
+    { id: uuid(), content: "Create a Kanban Board: Create a simple Kanban board that can be used in by a development team.", title:"This is a a thing" },
+    { id: uuid(), content: "Implement Kanban API ", title:"This board"},
+    { id: uuid(), content: "Implement user settings: Implement user settings so that blah blah blah blah ",title:"Here board" },
+    { id: uuid(), content: "Create Simple Drag and Drop for Kanban Board:  blah blah blah blah blah blah blah blahblah blah blah blah   ", title:"This board"},
+    { id: uuid(), content: "Implement API Dashboard: blah blah blah blahblah blab blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah", title:"This board" },
+    { id: uuid(), content: "Add Users to Project: blah blah blah blah blah blah blah blahblah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah ",title:"This board" },
+    { id: uuid(), content: "Seventh task", title:"This board" },
+    { id: uuid(), content: "Eight task",title:"This board" },
+    { id: uuid(), content: "Ninth task",title:"This board" },
+    { id: uuid(), content: "Tenth task",title:"This board" },
+    { id: uuid(), content: "Eleventh task", title:"Here board" }
 
   ];
   
@@ -32,7 +56,7 @@ const dummyinfo = [
       items: []
     }
   };
-
+  
 const onDragEnd = (result:any, columns:any, setColumns:any) => {
     if (!result.destination) return;
     const { source, destination } = result;
@@ -69,48 +93,63 @@ const onDragEnd = (result:any, columns:any, setColumns:any) => {
       });
     }
   };
+ 
 
+  const IsolatedModal =({title, content}:any) =>{
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    return(
+      <>
+      <Button onClick={onOpen} >
+          Details
+      </Button>
+      
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay/>
+        <ModalContent style={{minHeight:400}}>
+          <ModalHeader style={{color:"white"}}>
+          {title}
+        </ModalHeader><ModalCloseButton />
+        <ModalBody>
+          {content}
+        </ModalBody>
+        </ModalContent>
+        
+      </Modal>
+      </>
+        
+    );
+  };
 
 export const KanbanBoard = () =>{
-    const [columns, setColumns] = useState(workingboard);
+  const [columns, setColumns] = useState(workingboard);
     return (
-      <body style={{display:'flex',justifyContent: "right", height:"100%" }}>
+      <body style={{display:'flex',alignItems:"row",justifyContent: "right", height:"100%" }}>
         <DragDropContext
           onDragEnd={result => onDragEnd(result, columns, setColumns)}
         >
           {Object.entries(columns).map(([columnId, column], index) => {
             return (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  backgroundColor:"#070917",
-                  color:"white",
-                  width: "100%",
-                  height: "100%",
-                }}
+              <div 
                 key={columnId}
+                style={{
+                  backgroundColor:"#CBC3E3",
+                  width:"100%",
+                }}
               >
-                <h2 id ="boardtitle" >{column.name}</h2>
+                <h2 className ="boardtitle" >{column.name}</h2>
                 <div style={{ margin: 8 }} >
                   <Droppable droppableId={columnId} key={columnId}>
                     {(provided, snapshot) => {
                       return (
-                        <div
+                        <div 
+                          className="droparea"
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                           style={{
                             background: snapshot.isDraggingOver
-                              ? "lightgrey"
-                              : "white",
-                            padding: 4,
-                            width: 500,
-                            margin:10,
-                            minHeight: 900,
-                            alignItems:'center'
+                              ? "#e6e1f9"
+                              : "#e6e1f9"
                           }}
-                          id ="droparea"
                         >
                           {column.items.map((item, index) => {
                             return (
@@ -121,27 +160,30 @@ export const KanbanBoard = () =>{
                               >
                                 {(provided, snapshot) => {
                                   return (
-                                    <div
+                                    <div className="dragbox"
                                       ref={provided.innerRef}
                                       {...provided.draggableProps}
                                       {...provided.dragHandleProps}
                                       style={{
                                         userSelect: "none",
-                                        padding: 16,
-                                        margin: "0 0 8px 0",
-                                        minHeight: "50px",
                                         backgroundColor: snapshot.isDragging
                                           ? "#d0e6fb"
                                           : "white",
-                                        color: "black",
+                                        
                                         ...provided.draggableProps.style
                                       }}
-                                      id ="dragbox"
                                     >
+                                      [{index + 1}] : <b>{item.title}</b> 
+                                      <br/>
                                       {item.content}
-                                    </div>
+                                      <IsolatedModal title = {item.title} content ={item.content}/>
+                                                    
+                                     </div>
+                                  
                                   );
                                 }}
+                                  
+                                
                               </Draggable>
                             );
                           })}
