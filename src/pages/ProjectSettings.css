@@ -1,0 +1,12 @@
+#container {
+    background-color: #f7f2f8;
+    height: calc(100vh - 120px);
+    position: relative;
+    padding-bottom: 30px;
+    padding-top: 30px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
