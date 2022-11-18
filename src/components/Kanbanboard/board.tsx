@@ -14,46 +14,67 @@ import {
   Button
 } from '@chakra-ui/react';
 
+import{ 
+  ImUser,
+  ImBooks
+}from 'react-icons/im';
 
 
 const dummyinfo = [
-    { id: uuid(), title:"This is a a thing", content: "Create a Kanban Board: Create a simple Kanban board that can be used in by a development team."},
-    { id: uuid(), content: "Implement Kanban API ", title:"This board"},
-    { id: uuid(), content: "Implement user settings: Implement user settings so that blah blah blah blah ",title:"Here board" },
-    { id: uuid(), content: "Create Simple Drag and Drop for Kanban Board:  blah blah blah blah blah blah blah blahblah blah blah blah   ", title:"This board"},
-    { id: uuid(), content: "Implement API Dashboard: blah blah blah blahblah blab blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah", title:"This board" },
-    { id: uuid(), content: "Add Users to Project: blah blah blah blah blah blah blah blahblah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah ",title:"This board" },
-    { id: uuid(), content: "Seventh task", title:"This board" },
-    { id: uuid(), content: "Eight task",title:"This board" },
-    { id: uuid(), content: "Ninth task",title:"This board" },
-    { id: uuid(), content: "Tenth task",title:"This board" },
-    { id: uuid(), content: "Eleventh task", title:"Here board" },
-    { id: uuid(), content: "Create a Kanban Board: Create a simple Kanban board that can be used in by a development team.", title:"This is a a thing" },
-    { id: uuid(), content: "Implement Kanban API ", title:"This board"},
-    { id: uuid(), content: "Implement user settings: Implement user settings so that blah blah blah blah ",title:"Here board" },
-    { id: uuid(), content: "Create Simple Drag and Drop for Kanban Board:  blah blah blah blah blah blah blah blahblah blah blah blah   ", title:"This board"},
-    { id: uuid(), content: "Implement API Dashboard: blah blah blah blahblah blab blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah", title:"This board" },
-    { id: uuid(), content: "Add Users to Project: blah blah blah blah blah blah blah blahblah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah ",title:"This board" },
-    { id: uuid(), content: "Seventh task", title:"This board" },
-    { id: uuid(), content: "Eight task",title:"This board" },
-    { id: uuid(), content: "Ninth task",title:"This board" },
-    { id: uuid(), content: "Tenth task",title:"This board" },
-    { id: uuid(), content: "Eleventh task", title:"Here board" }
+  { id: uuid(), 
+    content: "Create a Kanban Board: Create a simple Kanban board that can be used in by a development team.", 
+    title:"Create Kanban Board ", 
+    assignee:"Derek", 
+    status: " " 
+  },
+    { id: uuid(), 
+      content: "Implement the Kanban API to the backend so that it is functional and works with the frontend", 
+      title:"Implement Kanban API", 
+      assignee:"Richie",
+      status: "" 
+    },
+    { id: uuid(), 
+      content: "Mark forget to buy some food on the way to work. Someone has to bring that to us cause that is really needed", 
+      title:"Get Groceries ", 
+      assignee:"Garrick",
+      status: ""  
+    },
+    { id: uuid(), 
+      content: "This function should be able to add user reports", 
+      title:"Add User Reports", 
+      assignee:"Reena",
+      status: ""  
+    },
+    { id: uuid(), 
+      content: "Create a Kanban Board: Create a simple Kanban board that can be used in by a development team.", 
+      title:"This is a a thing5", 
+      assignee:"Ramgenesh",
+      status: ""  
+    },
+    { id: uuid(), 
+      content: "Create a Kanban Board: Create a simple Kanban board that can be used in by a development team.", 
+      title:"This is a a thing", 
+      assignee:"Lucy",
+      status: ""  
+    },
 
   ];
   
   const workingboard = {
     [uuid()]: {
       name: "TO DO ",
-      items: dummyinfo
+      items: dummyinfo, 
+      status: "To Do "
     },
     [uuid()]: {
       name: "IN PROGRESS",
-      items: []
+      items: [],
+      status: "In Progress"
     },
     [uuid()]: {
       name: "DONE",
-      items: []
+      items: [], 
+      status: "Finished"
     }
   };
   
@@ -95,13 +116,14 @@ const onDragEnd = (result:any, columns:any, setColumns:any) => {
   };
  
 
-  const IsolatedModal =({title, content}:any) =>{
+  const IsolatedModal =({title, content, assignee, status}:any) =>{
     const { isOpen, onOpen, onClose } = useDisclosure();
+    
     return(
       <>
-      <Button onClick={onOpen} >
+      <button className = 'btn2' onClick={onOpen} >
           Details
-      </Button>
+      </button>
       
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay/>
@@ -111,6 +133,20 @@ const onDragEnd = (result:any, columns:any, setColumns:any) => {
         </ModalHeader><ModalCloseButton />
         <ModalBody>
           {content}
+          <br/> 
+          <br/>
+          <div className="assigneeCont">
+         <ImUser/>
+         <div className ="assignee"> 
+          Assignee:  {assignee}
+          </div>
+         </div>
+          <br/> 
+          <br/>
+          <div className="assigneeCont">
+            <ImBooks/>
+            <div className= "assignee"> Status: {status}</div> 
+          </div>
         </ModalBody>
         </ModalContent>
         
@@ -129,11 +165,11 @@ export const KanbanBoard = () =>{
         >
           {Object.entries(columns).map(([columnId, column], index) => {
             return (
-              <div 
+              <div className ="todoCont"
                 key={columnId}
                 style={{
                   backgroundColor:"#CBC3E3",
-                  width:"100%",
+                  
                 }}
               >
                 <h2 className ="boardtitle" >{column.name}</h2>
@@ -175,9 +211,12 @@ export const KanbanBoard = () =>{
                                     >
                                       [{index + 1}] : <b>{item.title}</b> 
                                       <br/>
-                                      {item.content}
-                                      <IsolatedModal title = {item.title} content ={item.content}/>
-                                                    
+                                      {item.content} 
+                                      <br/>
+                                      Status: {column.status}
+                                      <br/>
+                                      <IsolatedModal title = {item.title} content ={item.content} assignee={item.assignee} status ={column.status}/>
+                                      
                                      </div>
                                   
                                   );
