@@ -1,29 +1,39 @@
 import React from 'react';
-import './ProjectSettings.css'; // import the css file for this page
-
+import './ProjectSettings.css';
 
 export const ProjectSettings = () => {
-    
-    const [projectSettings, setProjectSettings] = React.useState({})
 
+    // Button redirecting to the project settings page will only be visible if there is an active project
+    // i.e., a project with "In Progress" status
+
+    type ProjectSettingsType = {
+        projectName: string
+        team: Array<{username: string, role: string}>
+        status: string
+    };
+
+    // Set the initial state of the project settings
+    const [projectSettings, setProjectSettings] = React.useState({} as ProjectSettingsType);
+
+    // On page load, fetch the project settings from the backend for the active project
     React.useEffect(() => {
-        (async () => { 
-            // Get Project Settings
-            fetch("http://localhost:8000/api/projects/get_active_project")
+        (async () => {
+            // Get active project's settings
+            fetch("http://localhost:8000/api/projects/get_active_project/")
             .then(response => response.json())
             .then(data => {
                 setProjectSettings(data)
             });
         })();
-    });
+    }, []);
 
+    // Get team members from the active project and display them
     const getTeamMembers = () => {
-        // Display users as list
-        const userList = projectSettings.team.map((user) => {
+        const userList = projectSettings.team?.map((user) => {
             return (
                 <li>
                     {user.username}
-                    <button value={user.username} onClick={removeUser}>
+                    <button id="remove-team-member" value={user.username} onClick={removeUser}>
                         Remove User
                     </button>
                 </li>
@@ -33,8 +43,8 @@ export const ProjectSettings = () => {
         return userList;
     }
 
-    // Handle remove user from project button
-    const removeUser = (e) => {
+    // Remove a user from the active project when the "Remove User" button is clicked
+    const removeUser = (e: any) => {
         e.preventDefault();
 
         const requestOptions = {
@@ -45,21 +55,26 @@ export const ProjectSettings = () => {
                 "role": "NULL"
             })
         };
-
+        
         (async () => { 
             fetch(`http://localhost:8000/api/projects/remove_project_user/${projectSettings.projectName}`, requestOptions)
                 .then(response => response.json())
                 .then(data => {
-                console.log(`Removed ${data} user from project`);
+                console.log(data);
             });
         })();
     }
 
     return (
         <div id="container">
-            <ul>
-                {getTeamMembers()}
-            </ul>
+            {/* Enter Other Project Settings Here */}
+            
+            <div id="manage-team">
+                <ul>
+                    {getTeamMembers()}
+                </ul>
+            </div>
+    
         </div>
     );
 };
