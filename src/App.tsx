@@ -11,6 +11,7 @@ import { LandingNav } from './components/header/Header';
 import { Footer } from './components/footer/Footer';
 import { Reports } from './pages/Reports';
 import { Dashboard } from './pages/Dashboard';
+import { ProjectSettings } from './pages/ProjectSettings';
 
 function App() {
     const app = useFirebaseApp();
@@ -25,6 +26,7 @@ function App() {
                 <Route path='/signup' element={<Signup />} />
                 <Route path='/reports' element={<Reports />} />
                 <Route path='/dashboard' element={<Dashboard />}/>
+                <Route path='/project-settings' element={<ProjectSettings />} />
             </Routes>
             <Footer />
         </AuthProvider>

@@ -1,0 +1,19 @@
+#container {
+    position: relative;
+    padding-bottom: 30px;
+    padding-top: 30px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#manage-team ul {
+}
+
+#manage-team li {
+}
+
+#manage-team  li:hover {
+}
