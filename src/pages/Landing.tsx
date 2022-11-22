@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Landing.css';
 import { LandingFAQ } from '../components/landing/LandingFAQ';
 import demo from '../images/demoPage.png';
 import demo2 from '../images/dashboard.png';
 import demo3 from '../images/reports.png';
+
 export const Landing = () => {
     return (
         <div id='wrapper'>
