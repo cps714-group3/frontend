@@ -10,6 +10,7 @@ import { Signup } from './pages/Signup';
 import { LandingNav } from './components/header/Header';
 import { Footer } from './components/footer/Footer';
 import { Reports } from './pages/Reports';
+import { WorkBoard } from './pages/Boardpage';
 import { Dashboard } from './pages/Dashboard';
 import { ProjectSettings } from './pages/ProjectSettings';
 
@@ -24,8 +25,9 @@ function App() {
                 <Route path='/' element={<Landing />} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/signup' element={<Signup />} />
+                <Route path='/board' element={<WorkBoard />} />
                 <Route path='/reports' element={<Reports />} />
-                <Route path='/dashboard' element={<Dashboard />}/>
+                <Route path='/dashboard' element={<Dashboard />} />
                 <Route path='/project-settings' element={<ProjectSettings />} />
             </Routes>
             <Footer />
