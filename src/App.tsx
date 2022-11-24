@@ -24,7 +24,7 @@ function App() {
                 <Route path='/login' element={<Login />}></Route>
                 <Route path='/signup' element={<Signup />} />
                 <Route path='/reports' element={<Reports />}></Route>
-                <Route path='/project-settings' element={<ProjectSettings />}></Route>
+                <Route path='/ProjectSettings' element={<ProjectSettings />}></Route>
             </Routes>
             <Footer />
         </AuthProvider>
