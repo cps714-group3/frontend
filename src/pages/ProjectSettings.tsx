@@ -1,107 +1,122 @@
-import React from 'react';
+import React from "react";
 import { useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { useSigninCheck, useUser } from "reactfire";
-import './ProjectSettings.css';
-
+import { useSigninCheck } from "reactfire";
+import "./ProjectSettings.css";
 
 export const ProjectSettings = () => {
+	// Button redirecting to the project settings page will only be visible if there is an active project for the user
+	// i.e., a project with "In Progress" status in which the user is a member of the team
 
-    // Button redirecting to the project settings page will only be visible if there is an active project
-    // i.e., a project with "In Progress" status
+	const navigate = useNavigate();
+	const toast = useToast();
+	const { status, data: signInCheckResult } = useSigninCheck();
 
-    const {data: user} = useUser();
-    const navigate = useNavigate();
-    const toast = useToast();
+	React.useEffect(() => {
+		if (status === 'success') {
+			if (!signInCheckResult.signedIn) {
+				toast({
+					title: 'Cannot Access Dashboard',
+					description: 'User is not Authenticated',
+					status: 'error',
+					duration: 3500,
+				});
+				navigate('/login');
+			}
+		}
+	}, [signInCheckResult, status]);
 
-    const { status, data: signInCheckResult } = useSigninCheck();
+	type ProjectSettingsType = Array<{
+		projectName: string;
+		projectStatus: string;
+		team: Array<{ username: string; role: string }>;
+		issues: Array<{
+			issueId: string;
+			title: string;
+			description: string;
+			assignee: string;
+			reporter: string;
+			priority: string;
+			status: string;
+			due: string;
+		}>;
+		reports: Array<{ doc_type: string; doc_name: string; doc_path: string }>;
+	}>;
 
-    React.useEffect(() => {
-        if (status === 'success') {
-            if (!signInCheckResult.signedIn) {
-                toast({
-                    title: 'Cannot Access Dashboard',
-                    description: 'User is not Authenticated',
-                    status: 'error',
-                    duration: 3500
-                })
-                navigate('/login');
-            } else {
-                console.log(user);
-            }
+	// Set the initial state of the project settings
+	const [projectSettings, setProjectSettings] = React.useState(
+		{} as ProjectSettingsType
+	);
 
-        }
-    }, [signInCheckResult, status, user])
+	// On page load, fetch the project settings from the backend for the active project
+	React.useEffect(() => {
+		(async () => {
+			// Get active project's settings
 
-    type ProjectSettingsType = {
-        projectName: string
-        team: Array<{username: string, role: string}>
-        status: string
-    };
+			// TODO: Get username of logged in user
+			const username = "test2@gmail.com";
+			fetch(
+				`http://localhost:8000/api/projects/get_user_active_project/${username}`
+			)
+				.then((response) => response.json())
+				.then((data) => {
+					setProjectSettings(data);
+				});
+		})();
+	}, []);
 
-    // Set the initial state of the project settings
-    const [projectSettings, setProjectSettings] = React.useState({} as ProjectSettingsType);
+	// Get team members from the active project and display them
+	const getTeamMembers = () => {
+		const userList = projectSettings[0]?.team?.map((user) => {
+			return (
+				<li key={user.username}>
+					{user.username}
+					<button
+						id="remove-team-member"
+						value={user.username}
+						onClick={removeUser}
+					>
+						Remove User
+					</button>
+				</li>
+			);
+		});
 
-    // On page load, fetch the project settings from the backend for the active project
-    React.useEffect(() => {
-        (async () => {
-            // Get active project's settings
-            fetch("http://localhost:8000/api/projects/get_active_project/")
-            .then(response => response.json())
-            .then(data => {
-                setProjectSettings(data)
-            });
-        })();
-    }, []);
+		return userList;
+	};
 
-    // Get team members from the active project and display them
-    const getTeamMembers = () => {
-        const userList = projectSettings.team?.map((user) => {
-            return (
-                <li>
-                    {user.username}
-                    <button id="remove-team-member" value={user.username} onClick={removeUser}>
-                        Remove User
-                    </button>
-                </li>
-            )
-        })
+	// Remove a user from the active project when the "Remove User" button is clicked
+	const removeUser = (e: any) => {
+		e.preventDefault();
 
-        return userList;
-    }
+		const requestOptions = {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				username: e.target.value,
+				role: "NULL",
+			}),
+		};
 
-    // Remove a user from the active project when the "Remove User" button is clicked
-    const removeUser = (e: any) => {
-        e.preventDefault();
+		(async () => {
+			fetch(
+				`http://localhost:8000/api/projects/remove_project_user/${projectSettings[0].projectName}`,
+				requestOptions
+			)
+				.then((response) => response.json())
+				.then((data) => {
+					console.log(data);
+				});
+		})();
+	};
 
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                "username": e.target.value,
-                "role": "NULL"
-            })
-        };
-        
-        (async () => { 
-            fetch(`http://localhost:8000/api/projects/remove_project_user/${projectSettings.projectName}`, requestOptions)
-                .then(response => response.json())
-                .then(data => {
-                console.log(data);
-            });
-        })();
-    }
+	return (
+		<div id="container">
+			{/* Enter Other Project Settings Here */}
 
-    return (
-        <div id="container">
-            {/* Enter Other Project Settings Here */}
-            
-            <div id="manage-team">
-                <ul>
-                    {getTeamMembers()}
-                </ul>
-            </div>
-    
-        </div>
-    );
+			<div id="manage-team">
+				<ul>{getTeamMembers()}</ul>
+			</div>
+		</div>
+	);
 };
