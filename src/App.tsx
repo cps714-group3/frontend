@@ -10,6 +10,8 @@ import { Signup } from './pages/Signup';
 import { LandingNav } from './components/header/Header';
 import { Footer } from './components/footer/Footer';
 import { Reports } from './pages/Reports';
+import { WorkBoard } from './pages/Boardpage';
+import { Dashboard } from './pages/Dashboard';
 import { ProjectSettings } from './pages/ProjectSettings';
 
 function App() {
@@ -20,11 +22,13 @@ function App() {
         <AuthProvider sdk={auth}>
             <LandingNav />
             <Routes>
-                <Route path='/' element={<Landing />}></Route>
-                <Route path='/login' element={<Login />}></Route>
+                <Route path='/' element={<Landing />} />
+                <Route path='/login' element={<Login />} />
                 <Route path='/signup' element={<Signup />} />
-                <Route path='/reports' element={<Reports />}></Route>
-                <Route path='/project-settings' element={<ProjectSettings />}></Route>
+                <Route path='/board' element={<WorkBoard />} />
+                <Route path='/reports' element={<Reports />} />
+                <Route path='/dashboard' element={<Dashboard />} />
+                <Route path='/project-settings' element={<ProjectSettings />} />
             </Routes>
             <Footer />
         </AuthProvider>
