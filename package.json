@@ -3,11 +3,13 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@chakra-ui/icons": "^2.0.12",
         "@chakra-ui/react": "^2.3.5",
         "@chakra-ui/theme-tools": "^2.0.12",
         "@emotion/react": "^11.10.4",
         "@emotion/styled": "^11.10.4",
         "@geist-ui/react": "^2.2.5",
+        "@mui/icons-material": "^5.10.15",
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^13.4.0",
         "@testing-library/user-event": "^13.5.0",
