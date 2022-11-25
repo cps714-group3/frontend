@@ -26,4 +26,11 @@ export const theme = extendTheme({
             },
         }),
     },
+    components: {
+        Link: {
+            baseStyle: {
+                textDecoration: 'none !important',
+            },
+        },
+    },
 });
