@@ -6,7 +6,7 @@
 }
 
 #header {
-  background: #3a2159;
+  background: #553592;
 }
 
 #header .container {
@@ -29,8 +29,9 @@
 }
 
 #header .logo img {
-  height: 55px;
-  object-fit: contain;
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .nav-area {
@@ -41,7 +42,6 @@
 
 .nav-area {
   font-size: 14px;
-  line-height: 1.25;
 }
 
 @media (min-width: 768px) {
@@ -210,4 +210,31 @@
   100% {
     transform: translate(1px, -2px) rotate(-1deg);
   }
+}
+
+#SideNav {
+  text-align: center;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  list-style: none;
+}
+
+#SideNav .logo {
+  width: 77px;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+#SideNav .logo img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+#SideNav li {
+  margin: 15px;
+}
+#SideNav p {
+  margin-left: 40px;
 }
