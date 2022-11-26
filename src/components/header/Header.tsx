@@ -140,7 +140,7 @@ export const LandingNav = () => {
                             </li>
 
                             <li>
-                                <Link as={RouterLink} to='/dashboard'>
+                                <Link as={RouterLink} to='/backlog'>
                                     <Button onClick={onClose} variant='ghost'>
                                         <ImDrawer size={30} />
                                         <Text> Backlog</Text>
@@ -167,10 +167,10 @@ export const LandingNav = () => {
                             </li>
 
                             <li>
-                                <Link as={RouterLink} to='/dashboard'>
+                                <Link as={RouterLink} to='/create_project'>
                                     <Button onClick={onClose} variant='ghost'>
                                         <ImBubble size={30} />
-                                        <Text> Issue Log</Text>
+                                        <Text> Create Project </Text>
                                     </Button>
                                 </Link>
                             </li>
