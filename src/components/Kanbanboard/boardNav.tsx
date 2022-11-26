@@ -11,7 +11,7 @@ export const BoardNav = () =>{
                 <li><ImDrawer size ={30} style={{marginRight:'15px'}}/> Backlog</li> 
                 <li> <ImImage size ={30} style={{marginRight:'15px'}}/> Kanban Board</li>
                 <li> <ImFileText size ={30} style={{marginRight:'15px'}}/>  Reports </li> 
-                <li> <ImBubble  size ={30} style={{marginRight:'15px'}}/> Issue Log</li> 
+                <li> <ImBubble  size ={30} style={{marginRight:'15px'}}/> Create Project </li> 
                 <li> <ImStatsDots  size ={30} style={{marginRight:'15px'}}/> Roadmap </li> 
                 <li> <ImClipboard size ={30} style={{marginRight:'15px'}}/>Active Sprint </li>
                 <li> <ImUsers size ={30} style={{marginRight:'15px'}}/>Project Settings </li>

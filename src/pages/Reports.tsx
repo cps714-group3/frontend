@@ -1,7 +1,9 @@
 import React from 'react';
 import {Tree} from "@geist-ui/react"; // this is for the file tree component
 import './Reports.css'; // import the css file for this page
-
+import { useSigninCheck, useUser } from 'reactfire';
+import { useToast } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 export const Reports = () => {
 
@@ -11,6 +13,22 @@ export const Reports = () => {
         docType: string;
     };
 
+    const { status, data: signInCheckResult } = useSigninCheck();
+    const toast = useToast();
+    const navigate = useNavigate();
+    React.useEffect(() => {
+        if (status === 'success') {
+            if (!signInCheckResult.signedIn) {
+                toast({
+                    title: 'Cannot Access Dashboard',
+                    description: 'User is not Authenticated',
+                    status: 'error',
+                    duration: 3500,
+                });
+                navigate('/login');
+            }
+        }
+    }, [signInCheckResult, status]);
     /*
         All states (variables) being declared with default values. First array item is the variable
         itself. Second item is the function that you call to change the value of the variable.
@@ -308,6 +326,9 @@ export const Reports = () => {
                                                         return (
                                                             <option key={index} value={item.docName}>{item.docName}</option>
                                                         )
+                                                    }
+                                                    else {
+                                                        return ('')
                                                     }
                                                 })
                                             }

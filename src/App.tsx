@@ -13,6 +13,8 @@ import { Reports } from './pages/Reports';
 import { WorkBoard } from './pages/Boardpage';
 import { Dashboard } from './pages/Dashboard';
 import { ProjectSettings } from './pages/ProjectSettings';
+import { CreateProject } from './pages/CreateProject';
+import { Backlog } from './pages/Backlog';
 
 function App() {
     const app = useFirebaseApp();
@@ -29,6 +31,8 @@ function App() {
                 <Route path='/reports' element={<Reports />} />
                 <Route path='/dashboard' element={<Dashboard />} />
                 <Route path='/project-settings' element={<ProjectSettings />} />
+                <Route path='/create_project' element={<CreateProject />}></Route>
+                <Route path='/backlog' element={<Backlog />} />
             </Routes>
             <Footer />
         </AuthProvider>
