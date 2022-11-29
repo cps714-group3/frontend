@@ -161,7 +161,7 @@ const IsolatedModal = ({ title, content, assignee, status }: any) => {
 export const KanbanBoard = () => {
     const [columns, setColumns] = useState(workingboard);
     return (
-        <body
+        <div
             style={{
                 display: 'flex',
                 alignItems: 'row',
@@ -285,6 +285,6 @@ export const KanbanBoard = () => {
                     );
                 })}
             </DragDropContext>
-        </body>
+        </div>
     );
 };
