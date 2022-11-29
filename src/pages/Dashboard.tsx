@@ -28,6 +28,7 @@ import { InputFormControl } from '../components/form/InputFormControl';
 import { usePageHeight } from '../helpers/hooks';
 import './Dashboard.css';
 import Sidebar from '../components/sidebar/Sidebar';
+import { Issue } from '../helpers/dbTypes';
 
 const createIssueFormSchema = object({
     title: string().min(3).required(),
@@ -57,7 +58,7 @@ export const Dashboard = () => {
     const { status, data: signInCheckResult } = useSigninCheck();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
-    const [issues, setIssues] = React.useState([]);
+    const [issues, setIssues] = React.useState<Array<Issue>>([]);
 
     const createIssueFormInitialValues: CreateIssueFormValues = {
         title: '',
@@ -140,7 +141,7 @@ export const Dashboard = () => {
 
                     <div className='card-warpper'>
                         {!!issues.length &&
-                            issues.map((issue: any) => {
+                            issues.map((issue, index) => {
                                 return (
                                     <Box
                                         p={4}
@@ -149,6 +150,7 @@ export const Dashboard = () => {
                                         boxShadow='0 0 15px -5px gray'
                                         color='black'
                                         w={'30%'}
+                                        key={index}
                                     >
                                         <Stack
                                             divider={
