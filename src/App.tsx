@@ -31,7 +31,10 @@ function App() {
                 <Route path='/reports' element={<Reports />} />
                 <Route path='/dashboard' element={<Dashboard />} />
                 <Route path='/project-settings' element={<ProjectSettings />} />
-                <Route path='/create_project' element={<CreateProject />}></Route>
+                <Route
+                    path='/create_project'
+                    element={<CreateProject />}
+                ></Route>
                 <Route path='/backlog' element={<Backlog />} />
             </Routes>
             <Footer />

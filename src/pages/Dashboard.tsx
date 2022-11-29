@@ -1,20 +1,22 @@
 import {
     Box,
     Button,
-    Center,
+    Stack,
+    Text,
+    StackDivider,
+    Heading,
     HStack,
     Modal,
     ModalBody,
     ModalCloseButton,
     ModalContent,
-    ModalFooter,
     ModalHeader,
     ModalOverlay,
     useDisclosure,
     useToast,
     VStack,
+    Center,
 } from '@chakra-ui/react';
-import { SingleDatepicker } from 'chakra-dayzed-datepicker';
 import { Form, Formik, FormikHelpers } from 'formik';
 import axios, { AxiosError } from 'axios';
 import React, { useEffect } from 'react';
@@ -24,6 +26,8 @@ import { date, mixed, object, string } from 'yup';
 import { DatePickerFormControl } from '../components/form/DatePickerFormControl';
 import { InputFormControl } from '../components/form/InputFormControl';
 import { usePageHeight } from '../helpers/hooks';
+import './Dashboard.css';
+import Sidebar from '../components/sidebar/Sidebar';
 
 const createIssueFormSchema = object({
     title: string().min(3).required(),
@@ -49,9 +53,11 @@ export const Dashboard = () => {
     const pageHeight = usePageHeight();
     const navigate = useNavigate();
     const toast = useToast();
-    const { status, data: signInCheckResult } = useSigninCheck();
 
+    const { status, data: signInCheckResult } = useSigninCheck();
     const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const [issues, setIssues] = React.useState([]);
 
     const createIssueFormInitialValues: CreateIssueFormValues = {
         title: '',
@@ -79,7 +85,8 @@ export const Dashboard = () => {
 
     const fetchData = async () => {
         const res = await axios.get('http://localhost:8000/api/issues');
-        console.log(res.data['queryResult']);
+        console.log(res.data['queryResult'].issues);
+        setIssues(res?.data['queryResult']?.issues);
     };
     useEffect(() => {
         fetchData();
@@ -124,11 +131,92 @@ export const Dashboard = () => {
 
     return (
         <>
-            <Box h={pageHeight}>
-                <Center>
-                    <Button onClick={onOpen}>Create</Button>
-                </Center>
-            </Box>
+            <div className='dashboard-container'>
+                {/* <Sidebar /> */}
+                <div className='dashboard-body'>
+                    <Center className='sub-header' py='2'>
+                        <button onClick={onOpen}>Create</button>
+                    </Center>
+
+                    <div className='card-warpper'>
+                        {!!issues.length &&
+                            issues.map((issue: any) => {
+                                return (
+                                    <Box
+                                        p={4}
+                                        m={4}
+                                        borderRadius={10}
+                                        boxShadow='0 0 15px -5px gray'
+                                        color='black'
+                                        w={'30%'}
+                                    >
+                                        <Stack
+                                            divider={
+                                                <StackDivider
+                                                    borderColor={'gainsboro'}
+                                                />
+                                            }
+                                            spacing='2'
+                                        >
+                                            <div className='heading-wrapper'>
+                                                <Heading size='md'>
+                                                    Client Report
+                                                </Heading>
+                                                <Text pt='2' fontSize='sm'>
+                                                    {issue?.status}as
+                                                </Text>
+                                            </div>
+                                            <Box>
+                                                <Heading
+                                                    size='xs'
+                                                    textTransform='uppercase'
+                                                >
+                                                    {issue?.title}
+                                                </Heading>
+                                                <Text pt='2' fontSize='sm'>
+                                                    {issue?.description}
+                                                </Text>
+                                            </Box>
+                                            <Box>
+                                                <Heading
+                                                    size='xs'
+                                                    textTransform='uppercase'
+                                                >
+                                                    Reporter
+                                                </Heading>
+                                                <Text pt='2' fontSize='sm'>
+                                                    {issue?.reporter}
+                                                </Text>
+                                            </Box>
+                                            <Box>
+                                                <Heading
+                                                    size='xs'
+                                                    textTransform='uppercase'
+                                                >
+                                                    Assignee
+                                                </Heading>
+                                                <Text pt='2' fontSize='sm'>
+                                                    {issue?.assignee}
+                                                </Text>
+                                            </Box>
+                                            <Box>
+                                                <Heading
+                                                    size='xs'
+                                                    textTransform='uppercase'
+                                                >
+                                                    Priority
+                                                </Heading>
+                                                <Text pt='2' fontSize='sm'>
+                                                    {issue?.priority}
+                                                </Text>
+                                            </Box>
+                                        </Stack>
+                                    </Box>
+                                );
+                            })}
+                    </div>
+                </div>
+            </div>
 
             <Modal
                 isOpen={isOpen}
