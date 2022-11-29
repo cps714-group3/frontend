@@ -95,17 +95,24 @@ export const LandingNav = () => {
         );
     };
 
+    const renderMenu = () => {
+        return (
+            status == 'success' &&
+            signInCheckResult.signedIn && (
+                <Button onClick={onOpen}>
+                    <HiMenu size={24} />
+                </Button>
+            )
+        );
+    };
+
     return (
         <>
             <header id='header'>
                 <div className='container'>
                     <div className='nav-area'>
                         <ul className='nav'>
-                            <li>
-                                <Button onClick={onOpen}>
-                                    <HiMenu size={24} />
-                                </Button>
-                            </li>
+                            <li>{renderMenu()}</li>
                             <li>
                                 <Link as={RouterLink} to='/'>
                                     <div className='logo'>
