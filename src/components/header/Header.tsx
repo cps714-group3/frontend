@@ -20,6 +20,7 @@ import {
     useDisclosure,
     InputGroup,
     Heading,
+    Box,
 } from '@chakra-ui/react';
 
 import {
@@ -109,7 +110,7 @@ export const LandingNav = () => {
     return (
         <>
             <header id='header'>
-                <div className='container'>
+                <Box className='container' py='2' mx='2'>
                     <div className='nav-area'>
                         <ul className='nav'>
                             <li>{renderMenu()}</li>
@@ -126,7 +127,7 @@ export const LandingNav = () => {
                         </ul>
                         {renderTopRightButton()}
                     </div>
-                </div>
+                </Box>
             </header>
 
             <Drawer isOpen={isOpen} placement='left' onClose={onClose}>
