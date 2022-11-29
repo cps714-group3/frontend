@@ -17,13 +17,13 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 const tabs = [
   { title: "Dashboard", Icon: Home, path: "Dashboard" },
   { title: "Backing", Icon: Edit, path: "Backing" },
-  { title: "Kanbon Board", Icon: Photo, path: "Kanbon" },
+  { title: "Kanban Board", Icon: Photo, path: "Kanban" },
   { title: "Reports", Icon: ListAlt, path: "Reports" },
   { title: "Issues Log", Icon: Message, path: "Issues" },
   { title: "RoadMap", Icon: DashboardIcon, path: "Road" },
   { title: "Active Sprints", Icon: ShoppingBag, path: "Active" },
   { title: "Project Settings", Icon: Group, path: "Project" },
-  { title: "User Setting", Icon: Settings, path: "User" },
+  { title: "User Settings", Icon: Settings, path: "User" },
   { title: "Tools", Icon: Build, path: "Tools" },
 ];
 
