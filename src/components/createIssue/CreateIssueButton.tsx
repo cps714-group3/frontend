@@ -41,7 +41,7 @@ interface Props {
     isOpen: boolean;
     onClose: () => void;
     onOpen: () => void;
-    refetchData: () => Promise<void>;
+    refetchData: () => Promise<void> | void;
 }
 
 export type CreateIssueFormValues = {

@@ -12,9 +12,11 @@ import {
     ModalCloseButton,
     useDisclosure,
     Button,
+    Center,
 } from '@chakra-ui/react';
 
 import { ImUser, ImBooks } from 'react-icons/im';
+import { CreateIssueButton } from '../createIssue/CreateIssueButton';
 
 const dummyinfo = [
     {
@@ -178,7 +180,7 @@ export const KanbanBoard = () => {
                             className='todoCont'
                             key={columnId}
                             style={{
-                                backgroundColor: '#CBC3E3',
+                                backgroundColor: '#f7f2f8',
                             }}
                         >
                             <h2 className='boardtitle'>{column.name}</h2>
