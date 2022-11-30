@@ -16,6 +16,8 @@ export const Reports = () => {
     const { status, data: signInCheckResult } = useSigninCheck();
     const toast = useToast();
     const navigate = useNavigate();
+    const { data: user } = useUser();
+
     React.useEffect(() => {
         if (status === 'success') {
             if (!signInCheckResult.signedIn) {
@@ -46,6 +48,9 @@ export const Reports = () => {
     const [other, setOther] = React.useState<Doc[]>([]);
     const [success, setSuccess] = React.useState<any | null>(null);
 
+    const [projName, setProjName] = React.useState("");
+    const stateRef = React.useRef<string>();
+    stateRef.current = projName; // useRef was used to update projName in the function openDoc. Did not work otherwise
     /*
         Sleep function used to delay for x milliseconds
     */
@@ -59,15 +64,26 @@ export const Reports = () => {
     }, [])
 
     /*
+        Pull current user's project name
+    */
+    React.useEffect(() => {
+        if (user?.email) {
+            fetch(`http://localhost:8000/api/projects/get_user_active_project?username=${encodeURIComponent(user?.email)}`)
+            .then(response => response.json())
+            .then(data => setProjName(data[0]["projectName"]));
+        }
+    }, [user?.email])
+
+    /*
         This also runs on page load. Fetches list of reports from backend db and sorts them into
         their respective arrays declared above for easy access later on in the rendering
     */
     React.useEffect(() => {
         (async () => { 
-    
+            
             await sleep(1000);
 
-            fetch("http://localhost:8000/api/reports/get_reports") // send get request to backend
+            fetch(`http://localhost:8000/api/reports/get_reports?projName=${projName}`) // send get request to backend
             .then(response => response.json()) // turn response into json
             .then(data => { // the json above is represented now by the variable data
                 // reset the arrays for each docType to prevent duplicate entries
@@ -104,7 +120,7 @@ export const Reports = () => {
             });
         })();
         
-      }, [counter]);
+      }, [counter, projName]);
     
     
     /*
@@ -117,6 +133,7 @@ export const Reports = () => {
         if (docType !== "" && myFile !== null && operation === "upload") {
             let form = new FormData(); // init new form
             form.append("docType", docType); // append stuff to form
+            form.append("projName", projName);
             form.append("uploaded_file", myFile);
             // perform the post request
             fetch('http://localhost:8000/api/reports/add_report', {
@@ -134,7 +151,7 @@ export const Reports = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({docName: delFile, docType: docType})
+                body: JSON.stringify({projName: projName, docName: delFile, docType: docType})
             });
             setCounter(counter => counter+1);
             setSuccess(true);
@@ -166,33 +183,33 @@ export const Reports = () => {
     */
     const openDoc = (path: string) => {
         const temp = path.split("/");
-    
+        
         if (temp[0] === "Burndown Charts") {
-            const w = window.open(`http://localhost:8000/static/reports/burndown/${temp[1]}`, '_blank');
+            const w = window.open(`http://localhost:8000/static/reports/burndown/${stateRef.current+"_"+temp[1]}`, '_blank');
             if (w) {
                 w.focus();
             }
         }
         if (temp[0] === "Gantt Charts") {
-            const w = window.open(`http://localhost:8000/static/reports/gantt/${temp[1]}`, '_blank');
+            const w = window.open(`http://localhost:8000/static/reports/gantt/${stateRef.current+"_"+temp[1]}`, '_blank');
             if (w) {
                 w.focus();
             }
         }
         if (temp[0] === "Project Management Plans") {
-            const w = window.open(`http://localhost:8000/static/reports/project_management/${temp[1]}`, '_blank');
+            const w = window.open(`http://localhost:8000/static/reports/project_management/${stateRef.current+"_"+temp[1]}`, '_blank');
             if (w) {
                 w.focus();
             }
         }
         if (temp[0] === "Risk Reports") {
-            const w = window.open(`http://localhost:8000/static/reports/risk/${temp[1]}`, '_blank');
+            const w = window.open(`http://localhost:8000/static/reports/risk/${stateRef.current+"_"+temp[1]}`, '_blank');
             if (w) {
                 w.focus();
             }
         }
         if (temp[0] === "Other") {
-            const w = window.open(`http://localhost:8000/static/reports/other/${temp[1]}`, '_blank');
+            const w = window.open(`http://localhost:8000/static/reports/other/${stateRef.current+"_"+temp[1]}`, '_blank');
             if (w) {
                 w.focus();
             }

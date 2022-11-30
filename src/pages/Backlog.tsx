@@ -14,6 +14,20 @@ export const Backlog = () => {
     const navigate = useNavigate();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
+    const [projName, setProjName] = React.useState("");
+    const stateRef = React.useRef<string>();
+    stateRef.current = projName;
+    const { data: user } = useUser();
+
+    React.useEffect(() => {
+        if (user?.email) {
+            console.log(user?.email);
+            fetch(`http://localhost:8000/api/projects/get_user_active_project?username=${encodeURIComponent(user?.email)}`)
+            .then(response => response.json())
+            .then(data => setProjName(data[0]["projectName"]));
+        }
+    }, [user?.email])
+
     React.useEffect(() => {
         if (status === 'success') {
             if (!signInCheckResult.signedIn) {
@@ -80,16 +94,18 @@ export const Backlog = () => {
         },
     ];
     const fetchData = () => {
-        fetch('http://localhost:8000/api/issues/')
-            .then((response) => response.json()) // turn response into json
-            .then((data) => {
-                // the json above is represented now by the variable data
-                setItems(data['queryResult']['issues']);
-            });
+        if (projName) {
+            fetch(`http://localhost:8000/api/issues/?projName=${projName}`)
+                .then((response) => response.json()) // turn response into json
+                .then((data) => {
+                    // the json above is represented now by the variable data
+                    setItems(data['queryResult']['issues']);
+                });
+        }
     };
     React.useEffect(() => {
         fetchData();
-    }, []);
+    }, [projName]);
 
     return (
         <div id='container'>
