@@ -47,11 +47,10 @@ export const Reports = () => {
     const [projMan, setProjMan] = React.useState<Doc[]>([]);
     const [other, setOther] = React.useState<Doc[]>([]);
     const [success, setSuccess] = React.useState<any | null>(null);
-    const [projName, setProjName] = React.useState("");
 
-    const [callBackSetup, setCallBackSetup] = React.useState(false);
+    const [projName, setProjName] = React.useState("");
     const stateRef = React.useRef<string>();
-    stateRef.current = projName;
+    stateRef.current = projName; // useRef was used to update projName in the function openDoc. Did not work otherwise
     /*
         Sleep function used to delay for x milliseconds
     */
@@ -64,13 +63,15 @@ export const Reports = () => {
         window.scrollTo(0, 0); //stop auto scroll on file select
     }, [])
 
+    /*
+        Pull current user's project name
+    */
     React.useEffect(() => {
         if (user?.email) {
             fetch(`http://localhost:8000/api/projects/get_user_active_project?username=${encodeURIComponent(user?.email)}`)
             .then(response => response.json())
             .then(data => setProjName(data[0]["projectName"]));
         }
-         //stop auto scroll on file select
     }, [user?.email])
 
     /*
@@ -182,7 +183,7 @@ export const Reports = () => {
     */
     const openDoc = (path: string) => {
         const temp = path.split("/");
-        console.log(projName);
+        
         if (temp[0] === "Burndown Charts") {
             const w = window.open(`http://localhost:8000/static/reports/burndown/${stateRef.current+"_"+temp[1]}`, '_blank');
             if (w) {
