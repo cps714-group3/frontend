@@ -181,6 +181,7 @@ export const KanbanBoard = () => {
                             key={columnId}
                             style={{
                                 backgroundColor: '#f7f2f8',
+                                overflowX:'scroll'
                             }}
                         >
                             <h2 className='boardtitle'>{column.name}</h2>
