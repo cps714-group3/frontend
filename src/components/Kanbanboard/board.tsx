@@ -86,82 +86,46 @@ const workingboard = {
     },
 };
 
-const onDragEnd = (result: any, columns: any, setColumns: any) => {
-    if (!result.destination) return;
-    const { source, destination } = result;
-
-    if (source.droppableId !== destination.droppableId) {
-        const sourceColumn = columns[source.droppableId];
-        const destColumn = columns[destination.droppableId];
-        const sourceItems = [...sourceColumn.items];
-        const destItems = [...destColumn.items];
-        const [removed] = sourceItems.splice(source.index, 1);
-        destItems.splice(destination.index, 0, removed);
-        setColumns({
-            ...columns,
-            [source.droppableId]: {
-                ...sourceColumn,
-                items: sourceItems,
-            },
-            [destination.droppableId]: {
-                ...destColumn,
-                items: destItems,
-            },
-        });
-    } else {
-        const column = columns[source.droppableId];
-        const copiedItems = [...column.items];
-        const [removed] = copiedItems.splice(source.index, 1);
-        copiedItems.splice(destination.index, 0, removed);
-        setColumns({
-            ...columns,
-            [source.droppableId]: {
-                ...column,
-                items: copiedItems,
-            },
-        });
-    }
-};
-
-const IsolatedModal = ({ title, content, assignee, status }: any) => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
-
-    return (
-        <>
-            <button className='btn2' onClick={onOpen}>
-                Details
-            </button>
-
-            <Modal isOpen={isOpen} onClose={onClose}>
-                <ModalOverlay />
-                <ModalContent style={{ minHeight: 400 }}>
-                    <ModalHeader style={{ color: 'white' }}>
-                        {title}
-                    </ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        {content}
-                        <br />
-                        <br />
-                        <div className='assigneeCont'>
-                            <ImUser />
-                            <div className='assignee'>Assignee: {assignee}</div>
-                        </div>
-                        <br />
-                        <br />
-                        <div className='assigneeCont'>
-                            <ImBooks />
-                            <div className='assignee'> Status: {status}</div>
-                        </div>
-                    </ModalBody>
-                </ModalContent>
-            </Modal>
-        </>
-    );
-};
-
 export const KanbanBoard = () => {
     const [columns, setColumns] = useState(workingboard);
+
+    const onDragEnd = (result: any) => {
+        if (!result.destination) return;
+        const { source, destination } = result;
+
+        if (source.droppableId !== destination.droppableId) {
+            const sourceColumn = columns[source.droppableId];
+            const destColumn = columns[destination.droppableId];
+            const sourceItems = [...sourceColumn.items];
+            const destItems = [...destColumn.items];
+            const [removed] = sourceItems.splice(source.index, 1);
+            destItems.splice(destination.index, 0, removed);
+            setColumns({
+                ...columns,
+                [source.droppableId]: {
+                    ...sourceColumn,
+                    items: sourceItems,
+                },
+                [destination.droppableId]: {
+                    ...destColumn,
+                    items: destItems,
+                },
+            });
+        } else {
+            const column = columns[source.droppableId];
+            const copiedItems = [...column.items];
+            const [removed] = copiedItems.splice(source.index, 1);
+            copiedItems.splice(destination.index, 0, removed);
+            setColumns({
+                ...columns,
+                [source.droppableId]: {
+                    ...column,
+                    items: copiedItems,
+                },
+            });
+        }
+    };
+
     return (
         <div
             style={{
@@ -171,9 +135,7 @@ export const KanbanBoard = () => {
                 height: '100%',
             }}
         >
-            <DragDropContext
-                onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
-            >
+            <DragDropContext onDragEnd={(result) => onDragEnd(result)}>
                 <HStack overflowX='auto'>
                     {Object.entries(columns).map(
                         ([columnId, column], index) => {
@@ -266,7 +228,7 @@ export const KanbanBoard = () => {
                                                                                         column.status
                                                                                     }
                                                                                     <br />
-                                                                                    <IsolatedModal
+                                                                                    <IssueDetailsModal
                                                                                         title={
                                                                                             item.title
                                                                                         }
@@ -300,5 +262,42 @@ export const KanbanBoard = () => {
                 </HStack>
             </DragDropContext>
         </div>
+    );
+};
+
+const IssueDetailsModal = ({ title, content, assignee, status }: any) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    return (
+        <>
+            <button className='btn2' onClick={onOpen}>
+                Details
+            </button>
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent style={{ minHeight: 400 }}>
+                    <ModalHeader style={{ color: 'white' }}>
+                        {title}
+                    </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        {content}
+                        <br />
+                        <br />
+                        <div className='assigneeCont'>
+                            <ImUser />
+                            <div className='assignee'>Assignee: {assignee}</div>
+                        </div>
+                        <br />
+                        <br />
+                        <div className='assigneeCont'>
+                            <ImBooks />
+                            <div className='assignee'> Status: {status}</div>
+                        </div>
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+        </>
     );
 };
