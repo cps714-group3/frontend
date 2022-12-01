@@ -4,6 +4,6 @@ export type Issue = {
     assignee: string;
     reporter: string;
     priority: string;
-    status: string;
+    status: 'TO DO' | 'IN PROGRESS' | 'DONE';
     due: string;
 };

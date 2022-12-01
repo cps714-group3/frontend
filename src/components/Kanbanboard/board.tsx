@@ -1,5 +1,10 @@
-import React, { useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import React, { useEffect, useState } from 'react';
+import {
+    DragDropContext,
+    Droppable,
+    Draggable,
+    DropResult,
+} from 'react-beautiful-dnd';
 import './board.css';
 import { v4 as uuid } from 'uuid';
 import { BoardNav } from './boardNav';
@@ -17,79 +22,68 @@ import {
 } from '@chakra-ui/react';
 
 import { ImUser, ImBooks } from 'react-icons/im';
+import { Issue } from '../../helpers/dbTypes';
 
-const dummyinfo = [
-    {
-        id: uuid(),
-        content:
-            'Create a Kanban Board: Create a simple Kanban board that can be used in by a development team.',
-        title: 'Create Kanban Board ',
-        assignee: 'Derek',
-        status: ' ',
-    },
-    {
-        id: uuid(),
-        content:
-            'Implement the Kanban API to the backend so that it is functional and works with the frontend',
-        title: 'Implement Kanban API',
-        assignee: 'Richie',
-        status: '',
-    },
-    {
-        id: uuid(),
-        content:
-            'Mark forget to buy some food on the way to work. Someone has to bring that to us cause that is really needed',
-        title: 'Get Groceries ',
-        assignee: 'Garrick',
-        status: '',
-    },
-    {
-        id: uuid(),
-        content: 'This function should be able to add user reports',
-        title: 'Add User Reports',
-        assignee: 'Reena',
-        status: '',
-    },
-    {
-        id: uuid(),
-        content:
-            'Create a Kanban Board: Create a simple Kanban board that can be used in by a development team.',
-        title: 'This is a a thing5',
-        assignee: 'Ramgenesh',
-        status: '',
-    },
-    {
-        id: uuid(),
-        content:
-            'Create a Kanban Board: Create a simple Kanban board that can be used in by a development team.',
-        title: 'This is a a thing',
-        assignee: 'Lucy',
-        status: '',
-    },
-];
-
-const workingboard = {
-    [uuid()]: {
+const initialWorkingBoard: WorkingBoard = {
+    'TO DO': {
         name: 'TO DO ',
-        items: dummyinfo,
+        items: [],
         status: 'To Do ',
     },
-    [uuid()]: {
+    'IN PROGRESS': {
         name: 'IN PROGRESS',
         items: [],
         status: 'In Progress',
     },
-    [uuid()]: {
+    DONE: {
         name: 'DONE',
         items: [],
         status: 'Finished',
     },
 };
 
-export const KanbanBoard = () => {
-    const [columns, setColumns] = useState(workingboard);
+type WorkingBoard = {
+    [key: string]: {
+        name: string;
+        items: Issue[];
+        status: string;
+    };
+};
 
-    const onDragEnd = (result: any) => {
+interface Props {
+    issues: Issue[];
+}
+
+export const KanbanBoard = React.memo(({ issues }: Props) => {
+    const [columns, setColumns] = useState(initialWorkingBoard);
+
+    useEffect(() => {
+        console.log(columns);
+    }, [columns]);
+    useEffect(() => {
+        // Clear working board items
+        const t_columns = { ...columns };
+        for (const board in t_columns) {
+            t_columns[board].items = [];
+        }
+        // Map through issues to update the working board
+        for (const issue of issues) {
+            switch (issue.status) {
+                case 'TO DO':
+                    t_columns['TO DO'].items.push(issue);
+                    break;
+                case 'IN PROGRESS':
+                    t_columns['IN PROGRESS'].items.push(issue);
+                    break;
+                case 'DONE':
+                    t_columns['DONE'].items.push(issue);
+                    break;
+            }
+        }
+        setColumns(t_columns);
+    }, [issues]);
+
+    const onDragEnd = (result: DropResult) => {
         if (!result.destination) return;
         const { source, destination } = result;
 
@@ -173,10 +167,14 @@ export const KanbanBoard = () => {
                                                                 return (
                                                                     <Draggable
                                                                         key={
-                                                                            item.id
+                                                                            item.title +
+                                                                            item.assignee +
+                                                                            item.reporter
                                                                         }
                                                                         draggableId={
-                                                                            item.id
+                                                                            item.title +
+                                                                            item.assignee +
+                                                                            item.reporter
                                                                         }
                                                                         index={
                                                                             index
@@ -220,7 +218,7 @@ export const KanbanBoard = () => {
                                                                                     </b>
                                                                                     <br />
                                                                                     {
-                                                                                        item.content
+                                                                                        item.description
                                                                                     }
                                                                                     <br />
                                                                                     Status:{' '}
@@ -233,7 +231,7 @@ export const KanbanBoard = () => {
                                                                                             item.title
                                                                                         }
                                                                                         content={
-                                                                                            item.content
+                                                                                            item.description
                                                                                         }
                                                                                         assignee={
                                                                                             item.assignee
@@ -263,7 +261,7 @@ export const KanbanBoard = () => {
             </DragDropContext>
         </div>
     );
-};
+});
 
 const IssueDetailsModal = ({ title, content, assignee, status }: any) => {
     const { isOpen, onOpen, onClose } = useDisclosure();

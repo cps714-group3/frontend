@@ -45,10 +45,6 @@ export const WorkBoard = () => {
         fetchData();
     }, [projName]);
 
-    useEffect(() => {
-        console.log(issues);
-    }, [issues]);
-
     return (
         <div>
             <Center py='2'>
@@ -59,7 +55,7 @@ export const WorkBoard = () => {
                     refetchData={fetchData}
                 />
             </Center>
-            <KanbanBoard />
+            <KanbanBoard issues={issues} />
         </div>
     );
 };
