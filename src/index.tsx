@@ -18,7 +18,9 @@ const firebaseConfig = {
     measurementId: 'G-CVKMJ41L1C',
 };
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const root = ReactDOM.createRoot(
+    document.getElementById('root') as HTMLElement
+);
 
 root.render(
     <ChakraProvider theme={theme}>
