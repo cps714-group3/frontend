@@ -19,10 +19,11 @@ import {
     Button,
     Center,
     HStack,
+    useToast,
 } from '@chakra-ui/react';
 
 import { ImUser, ImBooks } from 'react-icons/im';
-import { Issue } from '../../helpers/dbTypes';
+import { Issue, IssueStatus } from '../../helpers/dbTypes';
 
 const initialWorkingBoard: WorkingBoard = {
     'TO DO': {
@@ -56,7 +57,7 @@ interface Props {
 
 export const KanbanBoard = React.memo(({ issues }: Props) => {
     const [columns, setColumns] = useState(initialWorkingBoard);
-
+    const toast = useToast();
     useEffect(() => {
         console.log(columns);
     }, [columns]);
@@ -83,7 +84,32 @@ export const KanbanBoard = React.memo(({ issues }: Props) => {
         setColumns(t_columns);
     }, [issues]);
 
-    const onDragEnd = (result: DropResult) => {
+    const updateIssueStatus = (issueID: string, newStatus: string) => {
+        fetch(
+            `http://localhost:8000/api/issues/issues/edit?${new URLSearchParams(
+                {
+                    issue_id: issueID,
+                }
+            )}`,
+            {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    status: newStatus,
+                }),
+            }
+        )
+            .then((response) => response.json())
+            .then(async (data) => {
+                toast({
+                    title: 'Info',
+                    description: data,
+                    status: 'info',
+                    duration: 3500,
+                });
+            });
+    };
+    const onDragEnd = async (result: DropResult) => {
         if (!result.destination) return;
         const { source, destination } = result;
 
@@ -93,6 +119,7 @@ export const KanbanBoard = React.memo(({ issues }: Props) => {
             const sourceItems = [...sourceColumn.items];
             const destItems = [...destColumn.items];
             const [removed] = sourceItems.splice(source.index, 1);
+            removed.status = destination.droppableId as IssueStatus;
             destItems.splice(destination.index, 0, removed);
             setColumns({
                 ...columns,
@@ -105,6 +132,7 @@ export const KanbanBoard = React.memo(({ issues }: Props) => {
                     items: destItems,
                 },
             });
+            await updateIssueStatus(removed.issueID, removed.status);
         } else {
             const column = columns[source.droppableId];
             const copiedItems = [...column.items];
