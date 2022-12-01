@@ -68,9 +68,9 @@ export const Reports = () => {
     */
     React.useEffect(() => {
         if (user?.email) {
-            fetch(`http://localhost:8000/api/projects/get_user_active_project?username=${encodeURIComponent(user?.email)}`)
+            fetch(`http://localhost:8000/api/projects/?username=${encodeURIComponent(user?.email)}`)
             .then(response => response.json())
-            .then(data => setProjName(data[0]["projectName"]));
+            .then(data => setProjName(data["queryResult"]["projectName"]));
         }
     }, [user?.email])
 
