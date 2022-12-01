@@ -168,7 +168,9 @@ export const Reports = () => {
                 duration: 5000,
                 isClosable: true
             });
-            setVal("");
+            toDelete="";
+            let deletionSelect = (document.getElementById("delSelect")) as HTMLSelectElement;
+            deletionSelect.selectedIndex = 0;
         }
         else {
             toast({
@@ -199,7 +201,6 @@ export const Reports = () => {
         if (delFile !== "") {
             
             toDelete = delFile;
-            console.log(toDelete);
         }
     }, [delFile])
 
@@ -361,8 +362,8 @@ export const Reports = () => {
                                         <label className="formbold-form-label">
                                         Choose file:
                                         </label>
-                                        <select defaultValue={selectedVal} onChange={(e) => setDelFile(e.target.value)}>
-                                            <option value=""> Select an option </option>
+                                        <select id="delSelect" defaultValue={toDelete} onChange={(e) => setDelFile(e.target.value)}>
+                                            <option value="" disabled> Select an option </option>
                                             {
                                                 fileList.map((item, index) => {
                                                     if (item.docType === docType){
