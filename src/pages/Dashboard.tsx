@@ -39,8 +39,10 @@ export const Dashboard = () => {
     const toast = useToast();
 
     const { status, data: signInCheckResult } = useSigninCheck();
+    const { data: user } = useUser();
     const { isOpen, onOpen, onClose } = useDisclosure();
 
+    const [projName, setProjName] = React.useState('');
     const [issues, setIssues] = React.useState<Array<Issue>>([]);
 
     useEffect(() => {
@@ -55,17 +57,28 @@ export const Dashboard = () => {
                 navigate('/login');
             }
         }
+
     }, [signInCheckResult, status]);
 
-    const fetchData = async () => {
-        const res = await axios.get('http://localhost:8000/api/issues');
-        console.log(res.data['queryResult'].issues);
-        setIssues(res?.data['queryResult']?.issues);
+    useEffect(() => {
+        if (user?.email) {
+            fetch(`http://localhost:8000/api/projects/?username=${encodeURIComponent(user?.email)}`)
+                .then(response => response.json())
+                .then(data => setProjName(data["queryResult"]["projectName"]));
+        }
+    }, [user?.email])
+
+    const fetchData = () => {
+        if (projName) {
+            fetch(`http://localhost:8000/api/issues/?projName=${encodeURIComponent(projName)}`)
+                .then((response) => response.json())
+                .then(data => setIssues(data['queryResult']['issues']));
+        }
     };
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [projName]);
 
     return (
         <>
