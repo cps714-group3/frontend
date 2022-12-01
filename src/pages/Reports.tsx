@@ -46,10 +46,11 @@ export const Reports = () => {
     const [risk, setRisk] = React.useState<Doc[]>([]);
     const [projMan, setProjMan] = React.useState<Doc[]>([]);
     const [other, setOther] = React.useState<Doc[]>([]);
-    const [success, setSuccess] = React.useState<any | null>(null);
+    const [selectedVal, setVal] = React.useState("");
 
     const [projName, setProjName] = React.useState("");
     const stateRef = React.useRef<string>();
+    let toDelete = "";
     stateRef.current = projName; // useRef was used to update projName in the function openDoc. Did not work otherwise
     /*
         Sleep function used to delay for x milliseconds
@@ -79,6 +80,7 @@ export const Reports = () => {
         their respective arrays declared above for easy access later on in the rendering
     */
     React.useEffect(() => {
+        if (projName) {
         (async () => { 
             
             await sleep(1000);
@@ -119,7 +121,7 @@ export const Reports = () => {
                 });
             });
         })();
-        
+        }
       }, [counter, projName]);
     
     
@@ -129,8 +131,7 @@ export const Reports = () => {
     */
     const handleSubmit = (event:any) => {
         event.preventDefault();
-        // upload file
-        if (docType !== "" && myFile !== null && operation === "upload") {
+        if ((docType !== "") && (myFile !== null) && (operation === "upload")) {
             let form = new FormData(); // init new form
             form.append("docType", docType); // append stuff to form
             form.append("projName", projName);
@@ -142,23 +143,41 @@ export const Reports = () => {
             });
 
             setCounter(counter => counter+1); // I use this counter variable to invoke the file tree re-render upon file upload
-            setSuccess(true); // this is for the success or fail message
+            toast({
+                title: "Success!",
+                description: "Document has been uploaded successfully",
+                status: "success",
+                duration: 5000,
+                isClosable: true
+            }); // this is for the success or fail message
         }
-        else if (docType !== "" && delFile !== "" && operation === "delete") {
+        else if (docType !== "" && toDelete !== "" && operation === "delete") {
             // same deal except delete report now. I had to set the header Content-Type because I am sending a JSON body
             fetch("http://localhost:8000/api/reports/delete_report", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({projName: projName, docName: delFile, docType: docType})
+                body: JSON.stringify({projName: projName, docName: toDelete, docType: docType})
             });
             setCounter(counter => counter+1);
-            setSuccess(true);
+            toast({
+                title: "Success!",
+                description: "Document has been deleted successfully",
+                status: "success",
+                duration: 5000,
+                isClosable: true
+            });
+            setVal("");
         }
         else {
-            console.log("Invalid form data");
-            setSuccess(false);
+            toast({
+                title: "Operation Failed!",
+                description: "Invalid form data.",
+                status: "error",
+                duration: 5000,
+                isClosable: true
+            });
         }
         
     }
@@ -168,7 +187,6 @@ export const Reports = () => {
     */
     const updateFile = (event:any) => {
         //event.preventDefault();
-        setSuccess(null); // I use this to reset the status message
         if (event.target.files[0] !== null){ // check if file exists
             setMyFile(event.target.files[0]); // set the chosen file
         }
@@ -176,6 +194,14 @@ export const Reports = () => {
             console.log("No file selected");
         }
     }
+
+    React.useEffect(() => {
+        if (delFile !== "") {
+            
+            toDelete = delFile;
+            console.log(toDelete);
+        }
+    }, [delFile])
 
     /*
         This function takes a path to the static folder of the backend and opens a new tab in the user's browser
@@ -286,7 +312,7 @@ export const Reports = () => {
                             <label className="formbold-form-label">
                             Choose document type:
                             </label>
-                            <select value={docType} onChange={(e) => {setDocType(e.target.value); setSuccess(null);}}>
+                            <select value={docType} onChange={(e) => {setDocType(e.target.value);}}>
                                 <option hidden disabled value=""> Select an option </option>
                                 <option value="burndown">Burndown Chart</option>
                                 <option value="gantt">Gantt Chart</option>
@@ -300,7 +326,7 @@ export const Reports = () => {
                             <label className="formbold-form-label">
                             Choose operation:
                             </label>
-                            <select value={operation} onChange={(e) => {setOperation(e.target.value); setSuccess(null);}}>
+                            <select value={operation} onChange={(e) => {setOperation(e.target.value);}}>
                                 <option hidden disabled value=""> Select an option </option>
                                 <option value="upload">Upload</option>
                                 <option value="delete">Delete</option>
@@ -335,8 +361,8 @@ export const Reports = () => {
                                         <label className="formbold-form-label">
                                         Choose file:
                                         </label>
-                                        <select value={delFile} onChange={(e) => setDelFile(e.target.value)}>
-                                            <option hidden disabled value=""> Select an option </option>
+                                        <select defaultValue={selectedVal} onChange={(e) => setDelFile(e.target.value)}>
+                                            <option value=""> Select an option </option>
                                             {
                                                 fileList.map((item, index) => {
                                                     if (item.docType === docType){
@@ -358,9 +384,6 @@ export const Reports = () => {
                         <div>
                             <button className="formbold-btn w-full" type="submit">Submit</button>
                         </div>
-                        {(success !== null) ? (success === true) ? <label style={{color: "green"}} className="formbold-form-label">Success</label>
-                                : <label style={{color: "red"}} className="formbold-form-label">Operation failed. Please check inputs!</label>
-                            : ''}
                         </form>
                         
                     </div>
