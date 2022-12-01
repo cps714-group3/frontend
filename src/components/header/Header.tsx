@@ -146,6 +146,14 @@ export const LandingNav = () => {
                                     </Button>
                                 </Link>
                             </li>
+                            <li>
+                                <Link as={RouterLink} to='/board'>
+                                    <Button onClick={onClose} variant='ghost'>
+                                        <ImImage size={30} />
+                                        <Text> Kanban Board</Text>
+                                    </Button>
+                                </Link>
+                            </li>
 
                             <li>
                                 <Link as={RouterLink} to='/backlog'>
@@ -156,14 +164,7 @@ export const LandingNav = () => {
                                 </Link>
                             </li>
 
-                            <li>
-                                <Link as={RouterLink} to='/board'>
-                                    <Button onClick={onClose} variant='ghost'>
-                                        <ImImage size={30} />
-                                        <Text> Kanban Board</Text>
-                                    </Button>
-                                </Link>
-                            </li>
+                           
 
                             <li>
                                 <Link as={RouterLink} to='/reports'>
