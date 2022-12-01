@@ -12,9 +12,11 @@ import {
     ModalCloseButton,
     useDisclosure,
     Button,
+    Center,
 } from '@chakra-ui/react';
 
 import { ImUser, ImBooks } from 'react-icons/im';
+import { CreateIssueButton } from '../createIssue/CreateIssueButton';
 
 const dummyinfo = [
     {
@@ -161,7 +163,7 @@ const IsolatedModal = ({ title, content, assignee, status }: any) => {
 export const KanbanBoard = () => {
     const [columns, setColumns] = useState(workingboard);
     return (
-        <body
+        <div
             style={{
                 display: 'flex',
                 alignItems: 'row',
@@ -178,7 +180,8 @@ export const KanbanBoard = () => {
                             className='todoCont'
                             key={columnId}
                             style={{
-                                backgroundColor: '#CBC3E3',
+                                backgroundColor: '#f7f2f8',
+                                overflowX:'scroll'
                             }}
                         >
                             <h2 className='boardtitle'>{column.name}</h2>
@@ -285,6 +288,6 @@ export const KanbanBoard = () => {
                     );
                 })}
             </DragDropContext>
-        </body>
+        </div>
     );
 };

@@ -20,6 +20,7 @@ import {
     useDisclosure,
     InputGroup,
     Heading,
+    Box,
 } from '@chakra-ui/react';
 
 import {
@@ -109,7 +110,7 @@ export const LandingNav = () => {
     return (
         <>
             <header id='header'>
-                <div className='container'>
+                <Box className='container' py='2' mx='2'>
                     <div className='nav-area'>
                         <ul className='nav'>
                             <li>{renderMenu()}</li>
@@ -126,7 +127,7 @@ export const LandingNav = () => {
                         </ul>
                         {renderTopRightButton()}
                     </div>
-                </div>
+                </Box>
             </header>
 
             <Drawer isOpen={isOpen} placement='left' onClose={onClose}>
@@ -145,6 +146,14 @@ export const LandingNav = () => {
                                     </Button>
                                 </Link>
                             </li>
+                            <li>
+                                <Link as={RouterLink} to='/board'>
+                                    <Button onClick={onClose} variant='ghost'>
+                                        <ImImage size={30} />
+                                        <Text> Kanban Board</Text>
+                                    </Button>
+                                </Link>
+                            </li>
 
                             <li>
                                 <Link as={RouterLink} to='/backlog'>
@@ -155,14 +164,7 @@ export const LandingNav = () => {
                                 </Link>
                             </li>
 
-                            <li>
-                                <Link as={RouterLink} to='/board'>
-                                    <Button onClick={onClose} variant='ghost'>
-                                        <ImImage size={30} />
-                                        <Text> Kanban Board</Text>
-                                    </Button>
-                                </Link>
-                            </li>
+                           
 
                             <li>
                                 <Link as={RouterLink} to='/reports'>
