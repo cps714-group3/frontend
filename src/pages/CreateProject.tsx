@@ -113,7 +113,7 @@ export const CreateProject = () => {
         if (team.length === 1) {
             toast({
                 title: "Operation Failed!",
-                description: "Please check that Project Name and Team has been filled correctly",
+                description: "Please check that Project Name and Team has been filled correctly. Remember that you should not include your own email.",
                 status: "error",
                 duration: 5000,
                 isClosable: true
@@ -146,7 +146,7 @@ export const CreateProject = () => {
                             </div>
 
                             <div className="formbold-mb-5" style={{color: "#07074d"}}>
-                                <Text fontSize='18px' as='b' color="#07074d">Add team members. Press enter after each entry:</Text>
+                                <Text fontSize='18px' as='b' color="#07074d">Add team members other than yourself by providing their emails below. Press enter after each entry:</Text>
                                 <div id="email-input">
                                 <ReactMultiEmail
                                     emails={emails}
