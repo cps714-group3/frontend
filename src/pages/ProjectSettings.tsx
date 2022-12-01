@@ -17,7 +17,7 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
-import { useSigninCheck } from 'reactfire';
+import { useSigninCheck, useUser } from 'reactfire';
 import { ChangeEvent } from 'react';
 import './ProjectSettings.css';
 import { Form, Formik, FormikHelpers } from 'formik';
@@ -69,6 +69,8 @@ export const ProjectSettings = () => {
     const toast = useToast();
     const { status, data: signInCheckResult } = useSigninCheck();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const { data: user } = useUser();
+
     const cancelRef = useRef(null);
 
     useEffect(() => {
@@ -92,10 +94,11 @@ export const ProjectSettings = () => {
 
     // On page load, fetch the project
     const fetchProject = async () => {
-        const username = 'riteshahlawat1@gmail.com';
+        if (!user?.email) return;
+
         fetch(
             `http://localhost:8000/api/projects/?${new URLSearchParams({
-                username,
+                username: user.email,
             })}`
         )
             .then((response) => response.json())
