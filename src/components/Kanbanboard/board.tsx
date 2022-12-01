@@ -13,10 +13,10 @@ import {
     useDisclosure,
     Button,
     Center,
+    HStack,
 } from '@chakra-ui/react';
 
 import { ImUser, ImBooks } from 'react-icons/im';
-import { CreateIssueButton } from '../createIssue/CreateIssueButton';
 
 const dummyinfo = [
     {
@@ -174,119 +174,130 @@ export const KanbanBoard = () => {
             <DragDropContext
                 onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
             >
-                {Object.entries(columns).map(([columnId, column], index) => {
-                    return (
-                        <div
-                            className='todoCont'
-                            key={columnId}
-                            style={{
-                                backgroundColor: '#f7f2f8',
-                                overflowX:'scroll'
-                            }}
-                        >
-                            <h2 className='boardtitle'>{column.name}</h2>
-                            <div style={{ margin: 8 }}>
-                                <Droppable
-                                    droppableId={columnId}
+                <HStack overflowX='auto'>
+                    {Object.entries(columns).map(
+                        ([columnId, column], index) => {
+                            return (
+                                <div
+                                    className='todoCont'
                                     key={columnId}
-                                >
-                                    {(provided, snapshot) => {
-                                        return (
-                                            <div
-                                                className='droparea'
-                                                {...provided.droppableProps}
-                                                ref={provided.innerRef}
-                                                style={{
-                                                    background:
-                                                        snapshot.isDraggingOver
-                                                            ? '#e6e1f9'
-                                                            : '#e6e1f9',
-                                                }}
-                                            >
-                                                {column.items.map(
-                                                    (item, index) => {
-                                                        return (
-                                                            <Draggable
-                                                                key={item.id}
-                                                                draggableId={
-                                                                    item.id
-                                                                }
-                                                                index={index}
-                                                            >
-                                                                {(
-                                                                    provided,
-                                                                    snapshot
-                                                                ) => {
-                                                                    return (
-                                                                        <div
-                                                                            className='dragbox'
-                                                                            ref={
-                                                                                provided.innerRef
-                                                                            }
-                                                                            {...provided.draggableProps}
-                                                                            {...provided.dragHandleProps}
-                                                                            style={{
-                                                                                userSelect:
-                                                                                    'none',
-                                                                                backgroundColor:
-                                                                                    snapshot.isDragging
-                                                                                        ? '#d0e6fb'
-                                                                                        : 'white',
-
-                                                                                ...provided
-                                                                                    .draggableProps
-                                                                                    .style,
-                                                                            }}
-                                                                        >
-                                                                            [
-                                                                            {index +
-                                                                                1}
-                                                                            ] :{' '}
-                                                                            <b>
-                                                                                {
-                                                                                    item.title
-                                                                                }
-                                                                            </b>
-                                                                            <br />
-                                                                            {
-                                                                                item.content
-                                                                            }
-                                                                            <br />
-                                                                            Status:{' '}
-                                                                            {
-                                                                                column.status
-                                                                            }
-                                                                            <br />
-                                                                            <IsolatedModal
-                                                                                title={
-                                                                                    item.title
-                                                                                }
-                                                                                content={
-                                                                                    item.content
-                                                                                }
-                                                                                assignee={
-                                                                                    item.assignee
-                                                                                }
-                                                                                status={
-                                                                                    column.status
-                                                                                }
-                                                                            />
-                                                                        </div>
-                                                                    );
-                                                                }}
-                                                            </Draggable>
-                                                        );
-                                                    }
-                                                )}
-                                                {provided.placeholder}
-                                            </div>
-                                        );
+                                    style={{
+                                        backgroundColor: '#f7f2f8',
                                     }}
-                                </Droppable>
-                            </div>
-                        </div>
-                    );
-                })}
+                                >
+                                    <h2 className='boardtitle'>
+                                        {column.name}
+                                    </h2>
+                                    <div style={{ margin: 8 }}>
+                                        <Droppable
+                                            droppableId={columnId}
+                                            key={columnId}
+                                        >
+                                            {(provided, snapshot) => {
+                                                return (
+                                                    <div
+                                                        className='droparea'
+                                                        {...provided.droppableProps}
+                                                        ref={provided.innerRef}
+                                                        style={{
+                                                            background:
+                                                                snapshot.isDraggingOver
+                                                                    ? '#e6e1f9'
+                                                                    : '#e6e1f9',
+                                                        }}
+                                                    >
+                                                        {column.items.map(
+                                                            (item, index) => {
+                                                                return (
+                                                                    <Draggable
+                                                                        key={
+                                                                            item.id
+                                                                        }
+                                                                        draggableId={
+                                                                            item.id
+                                                                        }
+                                                                        index={
+                                                                            index
+                                                                        }
+                                                                    >
+                                                                        {(
+                                                                            provided,
+                                                                            snapshot
+                                                                        ) => {
+                                                                            return (
+                                                                                <div
+                                                                                    className='dragbox'
+                                                                                    ref={
+                                                                                        provided.innerRef
+                                                                                    }
+                                                                                    {...provided.draggableProps}
+                                                                                    {...provided.dragHandleProps}
+                                                                                    style={{
+                                                                                        userSelect:
+                                                                                            'none',
+                                                                                        backgroundColor:
+                                                                                            snapshot.isDragging
+                                                                                                ? '#d0e6fb'
+                                                                                                : 'white',
+
+                                                                                        ...provided
+                                                                                            .draggableProps
+                                                                                            .style,
+                                                                                    }}
+                                                                                >
+                                                                                    [
+                                                                                    {index +
+                                                                                        1}
+
+                                                                                    ]
+                                                                                    :{' '}
+                                                                                    <b>
+                                                                                        {
+                                                                                            item.title
+                                                                                        }
+                                                                                    </b>
+                                                                                    <br />
+                                                                                    {
+                                                                                        item.content
+                                                                                    }
+                                                                                    <br />
+                                                                                    Status:{' '}
+                                                                                    {
+                                                                                        column.status
+                                                                                    }
+                                                                                    <br />
+                                                                                    <IsolatedModal
+                                                                                        title={
+                                                                                            item.title
+                                                                                        }
+                                                                                        content={
+                                                                                            item.content
+                                                                                        }
+                                                                                        assignee={
+                                                                                            item.assignee
+                                                                                        }
+                                                                                        status={
+                                                                                            column.status
+                                                                                        }
+                                                                                    />
+                                                                                </div>
+                                                                            );
+                                                                        }}
+                                                                    </Draggable>
+                                                                );
+                                                            }
+                                                        )}
+                                                        {provided.placeholder}
+                                                    </div>
+                                                );
+                                            }}
+                                        </Droppable>
+                                    </div>
+                                </div>
+                            );
+                        }
+                    )}
+                </HStack>
             </DragDropContext>
         </div>
     );
