@@ -104,9 +104,7 @@ export const CreateIssueButton = React.memo(
                 // See: https://stackoverflow.com/questions/35843050/return-dd-mm-yyyy-from-date-object
                 due: values.due.toISOString().split('T')[0],
             };
-
-            console.log(data);
-
+            
             axios
                 .post("http://localhost:8000/api/issues/add", data, { params: { projectName: projName } })
                 .then(async (res) => {
