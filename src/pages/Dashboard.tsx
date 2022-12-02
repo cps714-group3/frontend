@@ -118,7 +118,7 @@ export const Dashboard = () => {
                                                 Client Report
                                             </Heading>
                                             <Text pt='2' fontSize='sm'>
-                                                {issue?.status}as
+                                                {issue?.status}
                                             </Text>
                                         </div>
                                         <Box>
