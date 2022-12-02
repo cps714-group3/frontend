@@ -1,12 +1,49 @@
 import { Center, useDisclosure } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useUser } from 'reactfire';
 import { CreateIssueButton } from '../components/createIssue/CreateIssueButton';
 import { KanbanBoard } from '../components/Kanbanboard/board';
 import { BoardNav } from '../components/Kanbanboard/boardNav';
+import { Issue } from '../helpers/dbTypes';
 
 export const WorkBoard = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const fetchData = async () => {};
+    const { data: user } = useUser();
+    const [projName, setProjName] = useState<string>();
+    const [issues, setIssues] = React.useState<Issue[]>([]);
+
+    useEffect(() => {
+        if (!user?.email) return;
+
+        fetch(
+            `http://localhost:8000/api/projects/?username=${encodeURIComponent(
+                user?.email
+            )}`
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                if (!data['queryResult']) return;
+                setProjName(data['queryResult']['projectName']);
+            });
+    }, [user?.email]);
+
+    const fetchData = async () => {
+        if (!projName) return;
+        fetch(
+            `http://localhost:8000/api/issues/?projName=${encodeURIComponent(
+                projName
+            )}`
+        )
+            .then((response) => response.json())
+            .then((data) => {
+                if (!data['queryResult']) return;
+                setIssues(data['queryResult']['issues']);
+            });
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, [projName]);
 
     return (
         <div>
@@ -18,7 +55,7 @@ export const WorkBoard = () => {
                     refetchData={fetchData}
                 />
             </Center>
-            <KanbanBoard />
+            <KanbanBoard issues={issues} />
         </div>
     );
 };

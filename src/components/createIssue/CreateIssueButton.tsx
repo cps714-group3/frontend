@@ -9,6 +9,7 @@ import {
     HStack,
     Button,
     useToast,
+    LightMode,
 } from '@chakra-ui/react';
 import axios, { AxiosError } from 'axios';
 import { Form, Formik, FormikHelpers } from 'formik';
@@ -97,9 +98,12 @@ export const CreateIssueButton = React.memo(
 
         return (
             <>
-                <Button onClick={onOpen} colorScheme='purple'>
-                    Create
-                </Button>
+                <LightMode>
+                    <Button onClick={onOpen} colorScheme='purple'>
+                        Create
+                    </Button>
+                </LightMode>
+
                 <Modal
                     isOpen={isOpen}
                     onClose={onClose}

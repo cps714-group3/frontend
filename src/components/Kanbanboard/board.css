@@ -16,7 +16,6 @@
     min-height: 990px;
     max-height: 990px;
     align-items: 'center';
-    overflow-y: scroll;
 }
 
 .boardtitle {
@@ -59,7 +58,6 @@
         min-height: 990px;
         max-height: 990px;
         align-items: 'center';
-        overflow-y: scroll;
         scrollbar-color: #e6e1f9;
     }
 
