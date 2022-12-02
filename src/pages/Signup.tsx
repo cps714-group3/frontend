@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
-import { Box, Button, Center, Flex, Heading, HStack, Link, Text, VStack } from '@chakra-ui/react';
+import { Button, Center, Flex, Heading, HStack, Link, Text, VStack } from '@chakra-ui/react';
 import { usePageHeight } from '../helpers/hooks';
 import { GoogleIcon } from '../customIcons/google';
 import { getRedirectResult, GoogleAuthProvider, signInWithRedirect } from 'firebase/auth';
@@ -19,16 +19,36 @@ export const Signup = () => {
         await signInWithRedirect(auth, provider);
     };
 
+    function addUserToDatabase(email: string, name: string) {
+        fetch('http://localhost:8000/api/users/create_user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: email,
+                name: name,
+            }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+
     useEffect(() => {
         const getOAuthResponse = async () => {
             await getRedirectResult(auth)
                 .then(async (result) => {
                     if (result) {
-                        const idToken = await result.user.getIdToken();
+                        addUserToDatabase(result.user.email!, result.user.displayName!);
                         navigate('/dashboard');
                     }
                 })
-                .catch((error) => {});
+                .catch((error) => {console.log(error)});
         };
         getOAuthResponse();
     }, [auth, navigate]);
@@ -56,6 +76,7 @@ export const Signup = () => {
                             leftIcon={<GoogleIcon boxSize='5' />}
                             iconSpacing='3'
                             color='gray.900'
+                            bg='gray.100'
                             onClick={googleLogin}>
                             Sign up with Google
                         </Button>
