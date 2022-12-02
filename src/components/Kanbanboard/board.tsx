@@ -20,9 +20,15 @@ import {
     Center,
     HStack,
     useToast,
+    VStack,
+    Text,
+    Heading,
+    LightMode,
 } from '@chakra-ui/react';
 
-import { ImUser, ImBooks } from 'react-icons/im';
+import { ImUser, ImBooks, ImUserCheck } from 'react-icons/im';
+import { BsGraphUp } from 'react-icons/bs';
+import { MdOutlineDateRange } from 'react-icons/md';
 import { Issue, IssueStatus } from '../../helpers/dbTypes';
 
 const initialWorkingBoard: WorkingBoard = {
@@ -58,9 +64,7 @@ interface Props {
 export const KanbanBoard = React.memo(({ issues }: Props) => {
     const [columns, setColumns] = useState(initialWorkingBoard);
     const toast = useToast();
-    useEffect(() => {
-        console.log(columns);
-    }, [columns]);
+
     useEffect(() => {
         // Clear working board items
         const t_columns = { ...columns };
@@ -132,6 +136,7 @@ export const KanbanBoard = React.memo(({ issues }: Props) => {
                     items: destItems,
                 },
             });
+
             await updateIssueStatus(removed.issueID, removed.status);
         } else {
             const column = columns[source.droppableId];
@@ -255,17 +260,8 @@ export const KanbanBoard = React.memo(({ issues }: Props) => {
                                                                                     }
                                                                                     <br />
                                                                                     <IssueDetailsModal
-                                                                                        title={
-                                                                                            item.title
-                                                                                        }
-                                                                                        content={
-                                                                                            item.description
-                                                                                        }
-                                                                                        assignee={
-                                                                                            item.assignee
-                                                                                        }
-                                                                                        status={
-                                                                                            column.status
+                                                                                        issue={
+                                                                                            item
                                                                                         }
                                                                                     />
                                                                                 </div>
@@ -291,39 +287,71 @@ export const KanbanBoard = React.memo(({ issues }: Props) => {
     );
 });
 
-const IssueDetailsModal = ({ title, content, assignee, status }: any) => {
+type IssueDetailsModalProps = {
+    issue: Issue;
+};
+const IssueDetailsModal = React.memo(({ issue }: IssueDetailsModalProps) => {
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     return (
         <>
-            <button className='btn2' onClick={onOpen}>
-                Details
-            </button>
+            <LightMode>
+                <Button onClick={onOpen} size='sm' colorScheme='purple' mt='2'>
+                    Details
+                </Button>
+            </LightMode>
 
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
-                <ModalContent style={{ minHeight: 400 }}>
+                <ModalContent>
                     <ModalHeader style={{ color: 'white' }}>
-                        {title}
+                        {issue.title}
                     </ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        {content}
-                        <br />
-                        <br />
-                        <div className='assigneeCont'>
-                            <ImUser />
-                            <div className='assignee'>Assignee: {assignee}</div>
-                        </div>
-                        <br />
-                        <br />
-                        <div className='assigneeCont'>
-                            <ImBooks />
-                            <div className='assignee'> Status: {status}</div>
-                        </div>
+                        <VStack spacing='4' pb='6' alignItems='flex-start'>
+                            <Text>{issue.description}</Text>
+                            <HStack>
+                                <ImUser />
+                                <Heading fontSize='md' pl='3'>
+                                    Asssignee:
+                                </Heading>
+                                <Text>{issue.assignee}</Text>
+                            </HStack>
+                            <HStack>
+                                <ImUserCheck />
+                                <Heading fontSize='md' pl='3'>
+                                    Reporter:
+                                </Heading>
+                                <Text>{issue.reporter}</Text>
+                            </HStack>
+                            <HStack>
+                                <ImBooks />
+                                <Heading fontSize='md' pl='3'>
+                                    Status:
+                                </Heading>
+                                <Text>{issue.status}</Text>
+                            </HStack>
+                            <HStack>
+                                <BsGraphUp />
+                                <Heading fontSize='md' pl='3'>
+                                    Priority:
+                                </Heading>
+                                <Text>{issue.priority}</Text>
+                            </HStack>
+                            <HStack>
+                                <MdOutlineDateRange />
+                                <Heading fontSize='md' pl='3'>
+                                    Due:
+                                </Heading>
+                                <Text>
+                                    {new Date(issue.due).toLocaleDateString()}
+                                </Text>
+                            </HStack>
+                        </VStack>
                     </ModalBody>
                 </ModalContent>
             </Modal>
         </>
     );
-};
+});

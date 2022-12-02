@@ -209,6 +209,7 @@ export const ProjectSettings = () => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(values),
         };
+
         fetch(
             `http://localhost:8000/api/projects/add_project_user/${project._id}`,
             requestOptions
