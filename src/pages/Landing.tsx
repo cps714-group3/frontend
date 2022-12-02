@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useSigninCheck } from 'reactfire';
 import './Landing.css';
 import { LandingFAQ } from '../components/landing/LandingFAQ';
 import demo from '../images/demoPage.png';
@@ -6,6 +6,8 @@ import demo2 from '../images/dashboard.png';
 import demo3 from '../images/reports.png';
 
 export const Landing = () => {
+    const { status, data: signInCheckResult } = useSigninCheck();
+
     return (
         <div id='wrapper'>
             <main id='main'>
@@ -14,9 +16,17 @@ export const Landing = () => {
                         <div className='text'>
                             <h1>Disaster prevention. Leading software management solution</h1>
                             <p>Your all in one project management tool.</p>
-                            <a href='/login' className='btn has-arrow'>
-                                Login / Sign up <i className='icon-arrow-right1'></i>
-                            </a>
+                            {
+                                status == 'success' && signInCheckResult.signedIn ? (
+                                    <a href='/dashboard' className='btn has-arrow'>
+                                        Dashboard <i className='icon-arrow-right1'></i>
+                                    </a>
+                                ) : (
+                                    <a href='/login' className='btn has-arrow'>
+                                        Login / Sign up <i className='icon-arrow-right1'></i>
+                                    </a>
+                                )
+                            }
                         </div>
                     </div>
                     <div className='img'>
@@ -70,9 +80,17 @@ export const Landing = () => {
                                 organization of their project. No matter how big or small your team,
                                 our wide array of tools will help you and your team thrive.
                             </p>
-                            <a href='/signup' className='btn has-arrow'>
-                                Sign up today<i className='icon-arrow-right1'></i>
-                            </a>
+                            {
+                                status == 'success' && signInCheckResult.signedIn ? (
+                                    <a href='/dashboard' className='btn has-arrow'>
+                                        Dashboard <i className='icon-arrow-right1'></i>
+                                    </a>
+                                ) : (
+                                    <a href='/signup' className='btn has-arrow'>
+                                        Sign up today<i className='icon-arrow-right1'></i>
+                                    </a>
+                                )
+                            }
                         </div>
                         <div className='col'>
                             <LandingFAQ />

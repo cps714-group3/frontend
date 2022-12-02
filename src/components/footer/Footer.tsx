@@ -1,7 +1,10 @@
 import React from 'react';
+import { useSigninCheck } from 'reactfire';
 import { LandingFooter } from './SubFooter';
 
 export const Footer = () => {
+    const { status, data: signInCheckResult } = useSigninCheck();
+    
     return (
         <footer id='footer'>
             <div className='container flex'>
@@ -34,9 +37,17 @@ export const Footer = () => {
                 </div>
                 <div className='right-col'>
                     <span className='title'>Start using Dumpster Fire now!</span>
-                    <a href='/signup' className='btn has-arrow'>
-                        Sign up <i className='icon-arrow-right1'></i>
-                    </a>
+                    {
+                        status == 'success' && signInCheckResult.signedIn ? (
+                            <a href='/dashboard' className='btn has-arrow'>
+                                Dashboard <i className='icon-arrow-right1'></i>
+                            </a>
+                        ) : (
+                            <a href='/signup' className='btn has-arrow'>
+                                Sign up <i className='icon-arrow-right1'></i>
+                            </a>
+                        )
+                    }
                 </div>
             </div>
             <LandingFooter />
