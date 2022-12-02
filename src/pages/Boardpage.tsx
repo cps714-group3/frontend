@@ -1,16 +1,34 @@
-import { Center, useDisclosure } from '@chakra-ui/react';
+import { Center, useDisclosure, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import { useUser } from 'reactfire';
+import { useNavigate } from 'react-router-dom';
+import { useSigninCheck, useUser } from 'reactfire';
 import { CreateIssueButton } from '../components/createIssue/CreateIssueButton';
 import { KanbanBoard } from '../components/Kanbanboard/board';
-import { BoardNav } from '../components/Kanbanboard/boardNav';
 import { Issue } from '../helpers/dbTypes';
 
 export const WorkBoard = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { data: user } = useUser();
+    const { status, data: signInCheckResult } = useSigninCheck();
     const [projName, setProjName] = useState<string>();
     const [issues, setIssues] = React.useState<Issue[]>([]);
+    const navigate = useNavigate();
+    const toast = useToast();
+
+    useEffect(() => {
+        if (status == 'success') {
+            if (!signInCheckResult.signedIn) {
+                toast({
+                    title: 'Cannot Access Dashboard',
+                    description: 'User is not Authenticated',
+                    status: 'error',
+                    duration: 3500,
+                });
+                navigate('/login');
+            }
+        }
+
+    }, [signInCheckResult, status]);
 
     useEffect(() => {
         if (!user?.email) return;
