@@ -104,7 +104,7 @@ export const CreateIssueButton = React.memo(
                 // See: https://stackoverflow.com/questions/35843050/return-dd-mm-yyyy-from-date-object
                 due: values.due.toISOString().split('T')[0],
             };
-            
+
             axios
                 .post("http://localhost:8000/api/issues/add", data, { params: { projectName: projName } })
                 .then(async (res) => {
@@ -143,6 +143,14 @@ export const CreateIssueButton = React.memo(
 
         return (
             <>
+                <style>
+                    {`
+                        option {
+                            background-color: white !important;
+                        }
+                    `}
+                </style>
+
                 <LightMode>
                     <Button onClick={onOpen} colorScheme='purple'>
                         Create
@@ -179,7 +187,8 @@ export const CreateIssueButton = React.memo(
 
                                             <FormControl defaultValue={teamMembers?.[0].username} isRequired colorScheme='purple'>
                                                 <FormLabel>Issue Assignee</FormLabel>
-                                                <Select placeholder='Select a team member' onChange={(e) => (setAssignee(e.target.value))} size='lg' iconColor='black' bg='white' outline='solid grey' outlineOffset='2px'>
+                                                <Select placeholder='Select a team member' onChange={(e) => (setAssignee(e.target.value))}
+                                                        size='lg' iconColor='black' bg='white' outline='solid grey' outlineOffset='2px'>
                                                     {getTeamMembers()}
                                                 </Select>
                                             </FormControl>
@@ -223,6 +232,8 @@ export const CreateIssueButton = React.memo(
                                                 errors={errors.description}
                                                 touched={touched.description}
                                                 h='185px'
+                                                backgroundColor='white'
+                                                color='black'
                                                 textArea={{ resize: 'none' }}
                                             />
                                         </VStack>
