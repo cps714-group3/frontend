@@ -58,24 +58,20 @@ export const LandingNav = () => {
                         {user?.displayName}
                     </MenuButton>
                     <MenuList>
-                        <MenuItem>
-                            <Link
-                                as={RouterLink}
-                                to='/dashboard'
-                                _hover={{ textDecoration: 'none' }}
-                            >
-                                Dashboard
-                            </Link>
-                        </MenuItem>
-                        <MenuItem>
-                            <Link
-                                as={RouterLink}
-                                to='/project-settings'
-                                _hover={{ textDecoration: 'none' }}
-                            >
-                                Project Settings
-                            </Link>
-                        </MenuItem>
+                        <Link
+                            as={RouterLink}
+                            to='/dashboard'
+                            _hover={{ textDecoration: 'none' }}
+                        >
+                            <MenuItem>Dashboard</MenuItem>
+                        </Link>
+                        <Link
+                            as={RouterLink}
+                            to='/project-settings'
+                            _hover={{ textDecoration: 'none' }}
+                        >
+                            <MenuItem>Project Settings</MenuItem>
+                        </Link>
                         <MenuItem onClick={async () => await signOut(auth)}>
                             Logout
                         </MenuItem>
@@ -163,8 +159,6 @@ export const LandingNav = () => {
                                     </Button>
                                 </Link>
                             </li>
-
-                           
 
                             <li>
                                 <Link as={RouterLink} to='/reports'>
