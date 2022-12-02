@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-
-import { Box, Button, Center, Flex, Heading, Link, VStack, Text, HStack } from '@chakra-ui/react';
+import { useEffect, useMemo } from 'react';
+import { Button, Center, Flex, Heading, Link, VStack, Text, HStack } from '@chakra-ui/react';
 import { usePageHeight } from '../helpers/hooks';
 import { GoogleIcon } from '../customIcons/google';
 import { GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'firebase/auth';
@@ -56,6 +55,7 @@ export const Login = () => {
                             leftIcon={<GoogleIcon boxSize='5' />}
                             iconSpacing='3'
                             color='gray.900'
+                            bg='gray.100'
                             onClick={googleLogin}>
                             Log in with Google
                         </Button>
