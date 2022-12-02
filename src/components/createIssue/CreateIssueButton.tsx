@@ -10,29 +10,23 @@ import {
     Button,
     useToast,
     LightMode,
+    Select,
+    FormControl,
+    FormLabel,
 } from '@chakra-ui/react';
 import axios, { AxiosError } from 'axios';
 import { Form, Formik, FormikHelpers } from 'formik';
 import React from 'react';
+import { useUser } from 'reactfire';
 import { object, string, mixed, date } from 'yup';
 import { DatePickerFormControl } from '../form/DatePickerFormControl';
 import { InputFormControl } from '../form/InputFormControl';
 
-const createIssueFormInitialValues: CreateIssueFormValues = {
-    title: '',
-    description: '',
-    assignee: '',
-    reporter: '',
-    priority: 'LOW',
-    status: 'TO DO',
-    due: new Date(),
-};
-
 const createIssueFormSchema = object({
     title: string().min(3).required(),
     description: string().min(10).required(),
-    assignee: string().min(3).required(),
-    reporter: string().min(3).required(),
+    assignee: string(),
+    reporter: string().min(3),
     priority: mixed().oneOf(['LOW', 'MEDIUM', 'HIGH']).default('LOW'),
     status: mixed().oneOf(['TO DO', 'IN PROGRESS', 'DONE']).default('TO DO'),
     due: date().required(),
@@ -58,11 +52,52 @@ export type CreateIssueFormValues = {
 export const CreateIssueButton = React.memo(
     ({ isOpen, onClose, onOpen, refetchData }: Props) => {
         const toast = useToast();
+        const { data: user } = useUser();
+
+        type TeamType = Array<{ username: string; role: string }>;
+
+        const [teamMembers, setTeam] = React.useState<TeamType>();
+        const [projName, setProjName] = React.useState<string>();
+        const [assignee, setAssignee] = React.useState<string>();
+
+        // On page load, fetch the project
+        const fetchProject = async () => {
+            if (!user?.email) return;
+
+            fetch(
+                `http://localhost:8000/api/projects/?${new URLSearchParams({
+                    username: user.email,
+                })}`
+            )
+                .then((response) => response.json())
+                .then((data) => {
+                    if (!data['queryResult']) return;
+                    setProjName(data['queryResult']['projectName']);
+                    setTeam(data['queryResult']['team']);
+                });
+        };
+
+        React.useEffect(() => {
+            fetchProject();
+        }, [user?.email]);
+
+        // Get team members from the active project and display them
+        const getTeamMembers = () => {
+            return (
+                teamMembers?.map((user) => {
+                    return (
+                        <option key={user.username} value={user.username}>{user.username}</option>
+                    );
+                })
+            );
+        };
 
         const submitCreateIssueForm = (
             values: CreateIssueFormValues,
-            {}: FormikHelpers<CreateIssueFormValues>
+            { }: FormikHelpers<CreateIssueFormValues>
         ) => {
+            values.assignee = assignee!;
+
             const data = {
                 ...values,
                 // Needed to get date into a yy-mm-dd format
@@ -70,8 +105,10 @@ export const CreateIssueButton = React.memo(
                 due: values.due.toISOString().split('T')[0],
             };
 
+            console.log(data);
+
             axios
-                .post('http://localhost:8000/api/issues/add', data)
+                .post("http://localhost:8000/api/issues/add", data, { params: { projectName: projName } })
                 .then(async (res) => {
                     if (res.status == 200) {
                         toast({
@@ -94,6 +131,16 @@ export const CreateIssueButton = React.memo(
                         duration: 3500,
                     });
                 });
+        };
+
+        const createIssueFormInitialValues: CreateIssueFormValues = {
+            title: '',
+            description: '',
+            assignee: '',
+            reporter: `${user?.email}`,
+            priority: 'LOW',
+            status: 'TO DO',
+            due: new Date(),
         };
 
         return (
@@ -132,17 +179,15 @@ export const CreateIssueButton = React.memo(
                                                 touched={touched.title}
                                             />
 
-                                            <InputFormControl
-                                                isRequired
-                                                label='Issue Assignee'
-                                                name='assignee'
-                                                type='text'
-                                                errors={errors.assignee}
-                                                touched={touched.assignee}
-                                            />
+                                            <FormControl defaultValue={teamMembers?.[0].username} isRequired colorScheme='purple'>
+                                                <FormLabel>Issue Assignee</FormLabel>
+                                                <Select placeholder='Select a team member' onChange={(e) => (setAssignee(e.target.value))} size='lg' iconColor='black' bg='white' outline='solid grey' outlineOffset='2px'>
+                                                    {getTeamMembers()}
+                                                </Select>
+                                            </FormControl>
 
                                             <InputFormControl
-                                                isRequired
+                                                isDisabled
                                                 label='Issue Reporter'
                                                 name='reporter'
                                                 type='text'
