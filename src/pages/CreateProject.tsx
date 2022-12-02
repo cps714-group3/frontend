@@ -27,7 +27,6 @@ export const CreateProject = () => {
     const stateRef = React.useRef<string>();
     stateRef.current = projectName;
     const { data: user } = useUser();
-    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
     
     React.useEffect(() => {
         if (user?.email) {

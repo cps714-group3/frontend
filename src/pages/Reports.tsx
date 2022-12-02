@@ -1,6 +1,6 @@
 import React from 'react';
-import {Tree} from "@geist-ui/react"; // this is for the file tree component
-import './Reports.css'; // import the css file for this page
+import {Tree} from "@geist-ui/react";
+import './Reports.css';
 import { useSigninCheck, useUser } from 'reactfire';
 import { useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
@@ -31,6 +31,7 @@ export const Reports = () => {
             }
         }
     }, [signInCheckResult, status]);
+
     /*
         All states (variables) being declared with default values. First array item is the variable
         itself. Second item is the function that you call to change the value of the variable.
@@ -46,12 +47,12 @@ export const Reports = () => {
     const [risk, setRisk] = React.useState<Doc[]>([]);
     const [projMan, setProjMan] = React.useState<Doc[]>([]);
     const [other, setOther] = React.useState<Doc[]>([]);
-    const [selectedVal, setVal] = React.useState("");
-
     const [projName, setProjName] = React.useState("");
     const stateRef = React.useRef<string>();
+
     let toDelete = "";
-    stateRef.current = projName; // useRef was used to update projName in the function openDoc. Did not work otherwise
+    stateRef.current = projName; // useRef was used to update projName in the function openDoc
+    
     /*
         Sleep function used to delay for x milliseconds
     */
@@ -142,7 +143,7 @@ export const Reports = () => {
                 body: form
             });
 
-            setCounter(counter => counter+1); // I use this counter variable to invoke the file tree re-render upon file upload
+            setCounter(counter => counter+1); // Counter variable to invoke the file tree re-render upon file upload
             toast({
                 title: "Success!",
                 description: "Document has been uploaded successfully",
@@ -152,7 +153,7 @@ export const Reports = () => {
             }); // this is for the success or fail message
         }
         else if (docType !== "" && toDelete !== "" && operation === "delete") {
-            // same deal except delete report now. I had to set the header Content-Type because I am sending a JSON body
+            // Set the header Content-Type because sending a JSON body
             fetch("http://localhost:8000/api/reports/delete_report", {
                 method: 'POST',
                 headers: {
@@ -244,14 +245,14 @@ export const Reports = () => {
     };
 
     /*
-        This is where the html stuff gets rendered dynamically. Google is your friend.
-        To dynamically render components, I use ternary operators "(condition) ? renderThis : elseRenderThat"
-        to show different things for different variable values. If I need to create multiple component, 
-        I use the var.map() function which will render a component for each item in var. If you don't want to
+        This is where the html stuff gets rendered dynamically.
+        To dynamically render components, use ternary operators "(condition) ? renderThis : elseRenderThat"
+        to show different things for different variable values. If you need to create multiple component, 
+        use the var.map() function which will render a component for each item in var. If you don't want to
         use ternary operators, you can also do
 
         { (() => {
-            your code here. I have example on line 275-318
+            your code here. Example on line 275-318
         })()}
     */
     return (

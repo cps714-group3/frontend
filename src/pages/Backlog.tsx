@@ -6,6 +6,7 @@ import { useSigninCheck, useUser } from 'reactfire';
 import { Center, useDisclosure, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { CreateIssueButton } from '../components/createIssue/CreateIssueButton';
+
 const FilterableTable = require('react-filterable-table');
 
 export const Backlog = () => {

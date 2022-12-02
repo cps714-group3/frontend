@@ -1,40 +1,23 @@
 import {
     Box,
-    Button,
     Stack,
     Text,
     StackDivider,
     Heading,
-    HStack,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalHeader,
-    ModalOverlay,
     useDisclosure,
     useToast,
-    VStack,
     Center,
 } from '@chakra-ui/react';
-import { Form, Formik, FormikHelpers } from 'formik';
-import axios, { AxiosError } from 'axios';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSigninCheck, useUser } from 'reactfire';
-import { date, mixed, object, string } from 'yup';
-import { DatePickerFormControl } from '../components/form/DatePickerFormControl';
-import { InputFormControl } from '../components/form/InputFormControl';
-import { usePageHeight } from '../helpers/hooks';
 import './Dashboard.css';
 import { Issue } from '../helpers/dbTypes';
 import {
     CreateIssueButton,
-    CreateIssueFormValues,
 } from '../components/createIssue/CreateIssueButton';
 
 export const Dashboard = () => {
-    const pageHeight = usePageHeight();
     const navigate = useNavigate();
     const toast = useToast();
 

@@ -3,7 +3,6 @@ import {
     AlertDialog,
     AlertDialogBody,
     AlertDialogContent,
-    AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogOverlay,
     Box,
@@ -18,7 +17,6 @@ import {
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { useSigninCheck, useUser } from 'reactfire';
-import { ChangeEvent } from 'react';
 import './ProjectSettings.css';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { InputFormControl } from '../components/form/InputFormControl';
