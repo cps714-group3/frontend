@@ -21,6 +21,7 @@ import {
     InputGroup,
     Heading,
     Box,
+    HStack,
 } from '@chakra-ui/react';
 
 import {
@@ -138,7 +139,7 @@ export const LandingNav = () => {
                                 <Link as={RouterLink} to='/dashboard'>
                                     <Button onClick={onClose} variant='ghost'>
                                         <ImHome size={30} />
-                                        <Text>Dashboard </Text>
+                                        <Text>Dashboard</Text>
                                     </Button>
                                 </Link>
                             </li>
@@ -146,7 +147,7 @@ export const LandingNav = () => {
                                 <Link as={RouterLink} to='/board'>
                                     <Button onClick={onClose} variant='ghost'>
                                         <ImImage size={30} />
-                                        <Text> Kanban Board</Text>
+                                        <Text>Kanban Board</Text>
                                     </Button>
                                 </Link>
                             </li>
@@ -155,7 +156,7 @@ export const LandingNav = () => {
                                 <Link as={RouterLink} to='/backlog'>
                                     <Button onClick={onClose} variant='ghost'>
                                         <ImDrawer size={30} />
-                                        <Text> Backlog</Text>
+                                        <Text>Backlog</Text>
                                     </Button>
                                 </Link>
                             </li>
@@ -164,7 +165,7 @@ export const LandingNav = () => {
                                 <Link as={RouterLink} to='/reports'>
                                     <Button onClick={onClose} variant='ghost'>
                                         <ImFileText size={30} />
-                                        <Text> Reports </Text>
+                                        <Text>Reports</Text>
                                     </Button>
                                 </Link>
                             </li>
@@ -173,25 +174,7 @@ export const LandingNav = () => {
                                 <Link as={RouterLink} to='/create_project'>
                                     <Button onClick={onClose} variant='ghost'>
                                         <ImBubble size={30} />
-                                        <Text> Create Project </Text>
-                                    </Button>
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link as={RouterLink} to='/dashboard'>
-                                    <Button onClick={onClose} variant='ghost'>
-                                        <ImStatsDots size={30} />
-                                        <Text> Roadmap </Text>
-                                    </Button>
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link as={RouterLink} to='/dashboard'>
-                                    <Button onClick={onClose} variant='ghost'>
-                                        <ImClipboard size={30} />
-                                        <Text>Active Sprint </Text>
+                                        <Text>Create Project</Text>
                                     </Button>
                                 </Link>
                             </li>
@@ -204,31 +187,15 @@ export const LandingNav = () => {
                                     </Button>
                                 </Link>
                             </li>
-
-                            <li>
-                                <Link as={RouterLink} to='/dashboard'>
-                                    <Button onClick={onClose} variant='ghost'>
-                                        <ImUser size={30} />
-                                        <Text> User Setting </Text>
-                                    </Button>
-                                </Link>
-                            </li>
-
-                            <li>
-                                <Link as={RouterLink} to='/dashboard'>
-                                    <Button onClick={onClose} variant='ghost'>
-                                        <ImHammer size={30} />
-                                        <Text> Tools </Text>
-                                    </Button>
-                                </Link>
-                            </li>
                         </ul>
                     </DrawerBody>
                     <DrawerFooter>
-                        {user?.displayName}
-                        <Button onClick={async () => await signOut(auth)}>
-                            Sign Out
-                        </Button>
+                        <HStack>
+                            <Text>{user?.displayName}</Text>
+                            <Button onClick={async () => await signOut(auth)}>
+                                Sign Out
+                            </Button>
+                        </HStack>
                     </DrawerFooter>
                 </DrawerContent>
             </Drawer>
